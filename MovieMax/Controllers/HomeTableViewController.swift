@@ -39,6 +39,18 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
         super.viewDidLoad()
         searchTextField.delegate = self
         searchButton.layer.cornerRadius = 10.0
+        self.banner.layer.cornerRadius = 20.0
+        self.banner.clipsToBounds = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

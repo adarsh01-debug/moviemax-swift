@@ -16,16 +16,20 @@ class ItemDetailViewController: UITableViewController {
     @IBOutlet var movieLanguageLabel: UILabel!
     @IBOutlet var movieRatingLabel: UILabel!
     @IBOutlet var watchListButtonOutlet: UIButton!
+    @IBOutlet var contentView: UIView!
     
     // MARK: - Variables
+    var activityIndicator = UIActivityIndicatorView()
+    var animatorView = UIView()
     var movie: ItemDetailModel = ItemDetailModel()
+    let movieDetailAPI = MovieDetailAPI()
     var imdbID: String?
     var isPresentInWatchList: Bool?
     weak var delegate: WatchListProtocol?
     
     // MARK: - Actions
     @IBAction func doneActionButton(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func watchListButtonAction(_ sender: Any) {
@@ -53,11 +57,40 @@ class ItemDetailViewController: UITableViewController {
         super.viewDidLoad()
         watchListButtonOutlet.layer.cornerRadius = watchListButtonOutlet.bounds.width / 2
         pullToRefresh()
-        setData()
+        addLoader()
+        detailFetch()
+    }
+    
+    fileprivate func addLoader() {
+        animatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        animatorView.addSubview(activityIndicator)
+        contentView.addSubview(animatorView)
+        animatorView.backgroundColor = .white
+        animatorView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        animatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        animatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        animatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: animatorView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: animatorView.centerYAnchor).isActive = true
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    fileprivate func detailFetch() {
+        if let imdbID = imdbID {
+            movieDetailAPI.fetchSpecificDetailApi(imdbID: imdbID, completion: { (movie) in
+                self.movie = movie
+                self.setData()
+                self.activityIndicator.stopAnimating()
+                self.animatorView.isHidden = true
+                self.tableView.reloadData()
+            })
+        }
     }
     
     fileprivate func pullToRefresh() {
@@ -74,13 +107,13 @@ class ItemDetailViewController: UITableViewController {
     
     func setData() {
         if let urlString = movie.Poster, let url = URL(string: urlString) {
-            if let language = movie.Language{
+            if let language = movie.Language {
                 movieLanguageLabel.text = "Language: \(language)"
             }
             moviePoster.load(url: url)
             movieTitleLabel.text = movie.Title
             moviePlotLabel.text = movie.Plot
-            if let rating = movie.imdbRating{
+            if let rating = movie.imdbRating {
                 movieRatingLabel.text = "Rating: \(rating) ⭐"
             }
             if let isPresent = isPresentInWatchList {

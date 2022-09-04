@@ -56,6 +56,12 @@ class MovieListScreen: UIViewController {
         currentPage = 1
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        movieCollectionView.reloadData()
+        pageCollectionView.reloadData()
+    }
+    
     func isPresentInWatchList(imdbID: String) -> Bool {
         return MovieListScreen.watchList.contains(imdbID)
     }
@@ -132,16 +138,12 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == movieCollectionView {
             if let Search = movieData?.search[indexPath.row], let imdbID = Search.imdbID {
-                movieDetailAPI.fetchSpecificDetailApi(imdbID: imdbID, completion: {
-                    (movie: ItemDetailModel) in
-                    if let itemDetailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ItemDetailViewController") as? ItemDetailViewController {
-                        itemDetailViewController.movie = movie
-                        itemDetailViewController.imdbID = imdbID
-                        itemDetailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
-                        itemDetailViewController.delegate = self
-                        self.navigationController?.pushViewController(itemDetailViewController, animated: true)
-                    }
-                })
+                if let itemDetailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ItemDetailViewController") as? ItemDetailViewController {
+                    itemDetailViewController.imdbID = imdbID
+                    itemDetailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
+                    itemDetailViewController.delegate = self
+                    self.navigationController?.present(itemDetailViewController, animated: true, completion: nil)
+                }
             } else {
                 print("Collection view controller, movie detail search error")
             }
@@ -163,9 +165,15 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == movieCollectionView {
             if isListView {
-                return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 2.3)
+                if UIDevice.current.orientation.isLandscape {
+                    return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height)
+                }
+                return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 2)
             } else {
-                return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height / 2)
+                if UIDevice.current.orientation.isLandscape {
+                    return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height)
+                }
+                return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height / 1.5)
             }
         } else {
             return CGSize(width: pageCollectionView.bounds.width / 5, height: pageCollectionView.bounds.height)
@@ -193,6 +201,7 @@ extension MovieListScreen: ResponseStatus {
                 self.movieCollectionView.backgroundView  = noDataLabel
                 self.movieCollectionView.backgroundColor = UIColor.white
                 self.movieData = nil
+                self.totalPages = 0
                 self.movieCollectionView.reloadData()
                 self.pageCollectionView.reloadData()
             } else {

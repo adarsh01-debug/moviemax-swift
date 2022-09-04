@@ -16,7 +16,7 @@ class MovieDetailAPI {
         if let url = URL(string: urlString){
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) {[weak self] (data,response,error) in
-                if error != nil{
+                if error != nil {
                     print("error")
                     return
                 }
