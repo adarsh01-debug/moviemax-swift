@@ -95,7 +95,7 @@ class ItemDetailViewController: UITableViewController {
     
     fileprivate func pullToRefresh() {
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl?.attributedTitle = NSAttributedString(string: "Refreshing")
         self.refreshControl?.addTarget(self, action: #selector(refresh(sender:)), for: UIControl.Event.valueChanged)
         tableView.refreshControl = self.refreshControl
     }

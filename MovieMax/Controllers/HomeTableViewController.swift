@@ -16,7 +16,7 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     
     // MARK: - Variables
     private let movieAPI = MovieAPI()
-    private var movieData: [MovieMax] = []
+    private var movieData: [Search] = []
     
     // MARK: - Actions
     @IBAction func searchButtonAction(_ sender: Any) {
@@ -26,6 +26,7 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
                     movieListScreen.movieData = movie
                     movieListScreen.initialMovie = text
                     self.searchTextField.text = ""
+                    self.searchTextField.resignFirstResponder()
                     self.navigationController?.pushViewController(movieListScreen, animated: true)
                 }
             })
@@ -38,6 +39,7 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchTextField.delegate = self
+        movieAPI.delegate = self
         searchButton.layer.cornerRadius = 10.0
         self.banner.layer.cornerRadius = 20.0
         self.banner.clipsToBounds = true
@@ -58,5 +60,18 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
             return UITableView.automaticDimension
         }
         return UIScreen.main.bounds.height
+    }
+}
+
+// MARK: - Response Extension
+extension HomeTableViewController: ResponseStatus {
+    func sendStatus(response: String?) {
+        DispatchQueue.main.async {
+            if response == "The data couldn’t be read because it is missing." {
+                let alert = UIAlertController(title: "Hein ji?", message: "There is no such movie/show on this earth.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
     }
 }

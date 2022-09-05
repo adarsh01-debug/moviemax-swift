@@ -12,7 +12,7 @@ class MovieAPI {
     private let baseURL = "https://www.omdbapi.com/?apikey=fd12ab17"
     weak var delegate: ResponseStatus?
     
-    func fecthMovieDetails (movieTitle: String, page: Int, completion: @escaping ((MovieMax)->())) {
+    func fecthMovieDetails (movieTitle: String, page: Int, completion: @escaping (([Search])->())) {
         let urlString = "\(baseURL)&s=\(movieTitle)&page=\(page)"
         if let url = URL(string: urlString){
             let session = URLSession(configuration: .default)
@@ -22,7 +22,7 @@ class MovieAPI {
                     return
                 }
                 if let safeData = data{
-                    if let movie = self?.parseJson(safeData){
+                    if let movie = self?.parseJson(safeData) {
                         DispatchQueue.main.async {
                             completion(movie)
                         }
@@ -35,17 +35,15 @@ class MovieAPI {
         }
     }
     
-    private func parseJson(_ movieData: Data) -> MovieMax? {
+    private func parseJson(_ movieData: Data) -> [Search]? {
         let decoder = JSONDecoder()
         do {
             let decodeData = try decoder.decode(MovieMax.self, from: movieData)
             let Search = decodeData.search
-            let totalResults = decodeData.totalResults
-            let response = decodeData.response
-            let newMovie = MovieMax(search: Search, totalResults: totalResults, response: response)
             delegate?.sendStatus(response: "all good")
-            return newMovie
+            return Search
         } catch {
+            print(error.localizedDescription)
             delegate?.sendStatus(response: error.localizedDescription)
             return nil
         }

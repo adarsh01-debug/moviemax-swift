@@ -120,7 +120,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XP2-mF-FJY">
-                                <rect key="frame" x="5" y="130" width="404" height="676.5"/>
+                                <rect key="frame" x="5" y="130" width="404" height="732"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dGw-Kk-ZWp">
                                     <size key="itemSize" width="128" height="128"/>
@@ -139,43 +139,19 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Cu5-5G-00p">
-                                <rect key="frame" x="0.0" y="806.5" width="414" height="89.5"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="TXF-s9-LAa">
-                                    <size key="itemSize" width="128" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jhp-t8-Pab">
-                                        <rect key="frame" x="0.0" y="-19.5" width="128" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="IPr-Fz-1M2">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </collectionViewCellContentView>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="CSY-z5-ChP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ZFw-IU-VsY" firstAttribute="leading" secondItem="pW0-J2-qU9" secondAttribute="trailing" constant="20" id="1Ai-F8-GmC"/>
-                            <constraint firstItem="Cu5-5G-00p" firstAttribute="leading" secondItem="CSY-z5-ChP" secondAttribute="leading" id="1lI-lp-HiI"/>
                             <constraint firstItem="XP2-mF-FJY" firstAttribute="leading" secondItem="CSY-z5-ChP" secondAttribute="leading" constant="5" id="2DS-Hx-hhF"/>
-                            <constraint firstItem="Cu5-5G-00p" firstAttribute="height" secondItem="Vnk-bl-gi4" secondAttribute="height" multiplier="0.1" id="8vG-Ws-BS2"/>
                             <constraint firstItem="pW0-J2-qU9" firstAttribute="leading" secondItem="CSY-z5-ChP" secondAttribute="leading" constant="20" id="FEV-sH-FcM"/>
                             <constraint firstItem="pW0-J2-qU9" firstAttribute="centerY" secondItem="ZFw-IU-VsY" secondAttribute="centerY" id="H1Z-g5-5no"/>
-                            <constraint firstAttribute="bottom" secondItem="Cu5-5G-00p" secondAttribute="bottom" id="Lya-dA-IsE"/>
                             <constraint firstItem="CSY-z5-ChP" firstAttribute="trailing" secondItem="XP2-mF-FJY" secondAttribute="trailing" constant="5" id="Rbs-Mw-g8c"/>
-                            <constraint firstItem="CSY-z5-ChP" firstAttribute="trailing" secondItem="Cu5-5G-00p" secondAttribute="trailing" id="WDs-tF-Pa1"/>
                             <constraint firstItem="CSY-z5-ChP" firstAttribute="trailing" secondItem="Ch1-ur-D2f" secondAttribute="trailing" constant="20" id="Ypx-9m-3tD"/>
                             <constraint firstItem="ZFw-IU-VsY" firstAttribute="top" secondItem="CSY-z5-ChP" secondAttribute="top" constant="10" id="c95-vl-M1b"/>
+                            <constraint firstItem="CSY-z5-ChP" firstAttribute="bottom" secondItem="XP2-mF-FJY" secondAttribute="bottom" id="grn-BM-re5"/>
                             <constraint firstItem="XP2-mF-FJY" firstAttribute="top" secondItem="ZFw-IU-VsY" secondAttribute="bottom" constant="20" id="hZl-uQ-Q8a"/>
-                            <constraint firstItem="Cu5-5G-00p" firstAttribute="top" secondItem="XP2-mF-FJY" secondAttribute="bottom" id="oVa-Wj-AK6"/>
                             <constraint firstItem="Ch1-ur-D2f" firstAttribute="centerY" secondItem="ZFw-IU-VsY" secondAttribute="centerY" id="rPc-jK-aXT"/>
                             <constraint firstItem="Ch1-ur-D2f" firstAttribute="leading" secondItem="ZFw-IU-VsY" secondAttribute="trailing" constant="20" id="w2Z-8t-X32"/>
                         </constraints>
@@ -183,7 +159,6 @@
                     <connections>
                         <outlet property="movieCollectionView" destination="XP2-mF-FJY" id="nOg-zo-mn4"/>
                         <outlet property="movieSearchBar" destination="ZFw-IU-VsY" id="QJz-8f-TmD"/>
-                        <outlet property="pageCollectionView" destination="Cu5-5G-00p" id="Xvn-wg-qpS"/>
                         <outlet property="viewToggleButton" destination="Ch1-ur-D2f" id="P2T-LM-uSo"/>
                     </connections>
                 </viewController>
