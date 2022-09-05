@@ -8,8 +8,11 @@
 import UIKit
 
 class PageCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Outlets
     @IBOutlet var pageNumber: UILabel!
     
+    // MARK: - Functions
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

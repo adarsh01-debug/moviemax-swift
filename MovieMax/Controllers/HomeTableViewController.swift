@@ -15,8 +15,8 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet var searchTextField: UITextField!
     
     // MARK: - Variables
-    let movieAPI = MovieAPI()
-    var movieData: [MovieMax] = []
+    private let movieAPI = MovieAPI()
+    private var movieData: [MovieMax] = []
     
     // MARK: - Actions
     @IBAction func searchButtonAction(_ sender: Any) {

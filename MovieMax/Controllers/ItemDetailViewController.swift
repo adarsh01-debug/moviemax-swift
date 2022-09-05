@@ -19,10 +19,10 @@ class ItemDetailViewController: UITableViewController {
     @IBOutlet var contentView: UIView!
     
     // MARK: - Variables
-    var activityIndicator = UIActivityIndicatorView()
-    var animatorView = UIView()
-    var movie: ItemDetailModel = ItemDetailModel()
-    let movieDetailAPI = MovieDetailAPI()
+    private var activityIndicator = UIActivityIndicatorView()
+    private var animatorView = UIView()
+    private var movie: ItemDetailModel = ItemDetailModel()
+    private let movieDetailAPI = MovieDetailAPI()
     var imdbID: String?
     var isPresentInWatchList: Bool?
     weak var delegate: WatchListProtocol?
@@ -105,7 +105,7 @@ class ItemDetailViewController: UITableViewController {
         self.refreshControl!.endRefreshing()
     }
     
-    func setData() {
+    fileprivate func setData() {
         if let urlString = movie.Poster, let url = URL(string: urlString) {
             if let language = movie.Language {
                 movieLanguageLabel.text = "Language: \(language)"

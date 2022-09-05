@@ -18,12 +18,12 @@ class MovieListScreen: UIViewController {
     // MARK: - Variables
     static var watchList: [String] = []
     var movieData: MovieMax?
-    let movieAPI = MovieAPI()
-    let movieDetailAPI = MovieDetailAPI()
-    var totalPages: Int?
-    var currentPage: Int?
     var initialMovie: String?
-    var isListView: Bool = true
+    private let movieAPI = MovieAPI()
+    private let movieDetailAPI = MovieDetailAPI()
+    private var totalPages: Int?
+    private var currentPage: Int?
+    private var isListView: Bool = true
     
     // MARK: - Actions
     @IBAction func backActionButton(_ sender: Any) {
@@ -62,7 +62,7 @@ class MovieListScreen: UIViewController {
         pageCollectionView.reloadData()
     }
     
-    func isPresentInWatchList(imdbID: String) -> Bool {
+    private func isPresentInWatchList(imdbID: String) -> Bool {
         return MovieListScreen.watchList.contains(imdbID)
     }
     
@@ -168,12 +168,12 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 if UIDevice.current.orientation.isLandscape {
                     return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height)
                 }
-                return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 2)
+                return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 2.3)
             } else {
                 if UIDevice.current.orientation.isLandscape {
                     return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height)
                 }
-                return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height / 1.5)
+                return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height / 2)
             }
         } else {
             return CGSize(width: pageCollectionView.bounds.width / 5, height: pageCollectionView.bounds.height)

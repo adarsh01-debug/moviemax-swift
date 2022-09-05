@@ -35,7 +35,7 @@ class MovieAPI {
         }
     }
     
-    func parseJson(_ movieData: Data) -> MovieMax? {
+    private func parseJson(_ movieData: Data) -> MovieMax? {
         let decoder = JSONDecoder()
         do {
             let decodeData = try decoder.decode(MovieMax.self, from: movieData)

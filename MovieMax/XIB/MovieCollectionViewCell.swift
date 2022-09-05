@@ -9,6 +9,7 @@ import UIKit
 
 class MovieCollectionViewCell: UICollectionViewCell {
 
+    // MARK: - Outlets
     @IBOutlet var moviePoster: UIImageView!
     @IBOutlet var movieTitle: UILabel!
     @IBOutlet var yearOfRelease: UILabel!
@@ -16,11 +17,13 @@ class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet var imageOfObject: UIImageView!
     @IBOutlet var watchListButton: UIButton!
     
+    // MARK: - Variables
     var imdbID: String?
     var releasedYear: String?
     var type: String?
     weak var delegate: WatchListProtocol?
     
+    // MARK: - Actions
     @IBAction func watchListButtonAction(_ sender: Any) {
         var addedToWatchList: Bool?
         if let imdbID = imdbID {
@@ -38,6 +41,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    // MARK: - Functions
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -45,7 +49,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         updateData()
     }
 
-    func updateData() {
+    private func updateData() {
         if let year = releasedYear {
             yearOfRelease.text = year
         }

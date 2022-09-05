@@ -9,7 +9,7 @@ import Foundation
 
 class MovieDetailAPI {
     
-    let detailApiUrl: String = "https://www.omdbapi.com/?apikey=fd12ab17&i="
+    private let detailApiUrl: String = "https://www.omdbapi.com/?apikey=fd12ab17&i="
     
     func fetchSpecificDetailApi (imdbID: String, completion: @escaping ((ItemDetailModel)->())){
         let urlString = "\(detailApiUrl)\(imdbID)"
@@ -35,7 +35,7 @@ class MovieDetailAPI {
         }
     }
     
-    func specificInfoParseJson(_ movieData: Data) -> ItemDetailModel? {
+    private func specificInfoParseJson(_ movieData: Data) -> ItemDetailModel? {
         let decoder = JSONDecoder()
         do {
             let decodeData = try decoder.decode(ItemDetailModel.self, from: movieData)
