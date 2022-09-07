@@ -29,7 +29,7 @@ class ItemDetailViewController: UITableViewController {
     
     // MARK: - Actions
     @IBAction func doneActionButton(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func watchListButtonAction(_ sender: Any) {
@@ -61,12 +61,18 @@ class ItemDetailViewController: UITableViewController {
         detailFetch()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     fileprivate func addLoader() {
         animatorView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .white
+        animatorView.backgroundColor = .black
         animatorView.addSubview(activityIndicator)
         contentView.addSubview(animatorView)
-        animatorView.backgroundColor = .white
         animatorView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         animatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         animatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

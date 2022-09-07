@@ -1,29 +1,25 @@
 //
-//  MovieCollectionViewCell.swift
+//  MovieGridCollectionViewCell.swift
 //  MovieMax
 //
-//  Created by Adarsh Pandey on 03/09/22.
+//  Created by Adarsh Pandey on 07/09/22.
 //
 
 import UIKit
 
-class MovieCollectionViewCell: UICollectionViewCell {
+class MovieGridCollectionViewCell: UICollectionViewCell {
 
-    // MARK: - Outlets
+    
     @IBOutlet var moviePoster: UIImageView!
     @IBOutlet var movieTitle: UILabel!
     @IBOutlet var yearOfRelease: UILabel!
     @IBOutlet var typeOfObject: UILabel!
-    @IBOutlet var imageOfObject: UIImageView!
     @IBOutlet var watchListButton: UIButton!
-    @IBOutlet var moviePosterWidthConstraint: NSLayoutConstraint!
     
-    // MARK: - Variables
     var imdbID: String?
     var type: String?
     weak var delegate: WatchListProtocol?
     
-    // MARK: - Actions
     @IBAction func watchListButtonAction(_ sender: Any) {
         var addedToWatchList: Bool?
         if let imdbID = imdbID {
@@ -40,7 +36,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    // MARK: - Functions
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -57,7 +52,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.1
         layer.shadowOffset = CGSize(width: 0, height: 5)
-        updateData()
     }
     
     override func layoutSubviews() {
@@ -66,15 +60,5 @@ class MovieCollectionViewCell: UICollectionViewCell {
                 roundedRect: bounds,
                 cornerRadius: 5.0
             ).cgPath
-    }
-
-    private func updateData() {
-        if let type = typeOfObject.text {
-            if type == TypeEnum.movie.rawValue {
-                imageOfObject.image = UIImage(systemName: "video.fill")
-            } else if type == TypeEnum.series.rawValue {
-                imageOfObject.image = UIImage(systemName: "tv")
-            }
-        }
     }
 }
