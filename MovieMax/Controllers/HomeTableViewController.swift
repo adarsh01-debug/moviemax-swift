@@ -41,8 +41,8 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
         searchTextField.delegate = self
         movieAPI.delegate = self
         searchButton.layer.cornerRadius = 10.0
-        self.banner.layer.cornerRadius = 20.0
-        self.banner.clipsToBounds = true
+        banner.layer.cornerRadius = 20.0
+        banner.clipsToBounds = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

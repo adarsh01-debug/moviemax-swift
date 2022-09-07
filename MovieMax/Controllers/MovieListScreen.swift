@@ -53,6 +53,11 @@ class MovieListScreen: UIViewController {
         pullToRefresh()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         movieCollectionView.reloadData()
@@ -100,17 +105,9 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieCollectionViewCell", for: indexPath) as? MovieCollectionViewCell else {
                 return UICollectionViewCell()
         }
-            
-        if isListView {
-            cell.layer.borderColor = UIColor.gray.cgColor
-            cell.layer.cornerRadius = 10.0
-            cell.layer.borderWidth = 1
-        } else {
-            cell.layer.borderColor = UIColor.gray.cgColor
-            cell.layer.cornerRadius = 10.0
-            cell.layer.borderWidth = 0
+        if !isListView {
+            cell.watchListButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
         }
-        
         let basicDetail: Search? = movieData[indexPath.row]
         cell.movieTitle.text = basicDetail?.title
         if let year = basicDetail?.year {
@@ -152,16 +149,18 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width =  movieCollectionView.bounds.width
+        let height =  movieCollectionView.bounds.height
         if isListView {
             if UIDevice.current.orientation.isLandscape {
-                return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 1.5)
+                return CGSize(width: width, height: height / 2.0)
             }
-            return CGSize(width: movieCollectionView.bounds.width, height: movieCollectionView.bounds.height / 3)
+            return CGSize(width: width, height: height / 3.5)
         } else {
             if UIDevice.current.orientation.isLandscape {
-                return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height)
+                return CGSize(width: width / 2, height: height / 1.5)
             }
-            return CGSize(width: movieCollectionView.bounds.width / 2, height: movieCollectionView.bounds.height / 2)
+            return CGSize(width: width / 2, height: height / 2.5)
         }
     }
 

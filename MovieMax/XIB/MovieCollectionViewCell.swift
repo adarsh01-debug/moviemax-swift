@@ -16,10 +16,9 @@ class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet var typeOfObject: UILabel!
     @IBOutlet var imageOfObject: UIImageView!
     @IBOutlet var watchListButton: UIButton!
-    
+    @IBOutlet var moviePosterWidthConstraint: NSLayoutConstraint!
     // MARK: - Variables
     var imdbID: String?
-    var releasedYear: String?
     var type: String?
     weak var delegate: WatchListProtocol?
     
@@ -46,14 +45,27 @@ class MovieCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
         watchListButton.layer.cornerRadius = 15.0
+        contentView.layer.cornerRadius = 5.0
+        contentView.layer.masksToBounds = true
+        layer.cornerRadius = 10.0
+        layer.masksToBounds = false
+        layer.shadowRadius = 8.0
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.1
+        layer.shadowOffset = CGSize(width: 0, height: 5)
         updateData()
+    }
+    
+    override func layoutSubviews() {
+            super.layoutSubviews()
+            layer.shadowPath = UIBezierPath(
+                roundedRect: bounds,
+                cornerRadius: 5.0
+            ).cgPath
     }
 
     private func updateData() {
-        if let year = releasedYear {
-            yearOfRelease.text = year
-        }
-        if let type = type {
+        if let type = typeOfObject.text {
             if type == TypeEnum.movie.rawValue {
                 imageOfObject.image = UIImage(systemName: "video.fill")
             } else if type == TypeEnum.series.rawValue {
