@@ -141,15 +141,17 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
             }
-            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.moviePoster.image = cachedImage
-            } else {
-                if let poster = basicDetail?.poster {
-                    self.loadImage(poster) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        cell.moviePoster.image = image
-                        self.cache.setObject(image, forKey: itemNumber)
+            if let posterURL = basicDetail?.imdbID {
+                let itemNumber = NSString(string: posterURL)
+                if let cachedImage = self.cache.object(forKey: itemNumber) {
+                    cell.moviePoster.image = cachedImage
+                } else {
+                    if let poster = basicDetail?.poster {
+                        self.loadImage(poster) { [weak self] (image) in
+                            guard let self = self, let image = image else { return }
+                            cell.moviePoster.image = image
+                            self.cache.setObject(image, forKey: itemNumber)
+                        }
                     }
                 }
             }
@@ -180,15 +182,17 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
             }
-            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.moviePoster.image = cachedImage
-            } else {
-                if let poster = basicDetail?.poster {
-                    self.loadImage(poster) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        cell.moviePoster.image = image
-                        self.cache.setObject(image, forKey: itemNumber)
+            if let posterURL = basicDetail?.imdbID {
+                let itemNumber = NSString(string: posterURL)
+                if let cachedImage = self.cache.object(forKey: itemNumber) {
+                    cell.moviePoster.image = cachedImage
+                } else {
+                    if let poster = basicDetail?.poster {
+                        self.loadImage(poster) { [weak self] (image) in
+                            guard let self = self, let image = image else { return }
+                            cell.moviePoster.image = image
+                            self.cache.setObject(image, forKey: itemNumber)
+                        }
                     }
                 }
             }
@@ -219,7 +223,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             return CGSize(width: width, height: 160.0)
         } else {
             if UIDevice.current.orientation.isLandscape {
-                return CGSize(width: width / 2, height: height / 0.5)
+                return CGSize(width: width / 2, height: height / 1)
             }
             return CGSize(width: width / 2, height: 310.0)
         }

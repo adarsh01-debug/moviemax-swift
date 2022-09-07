@@ -44,21 +44,17 @@ class MovieGridCollectionViewCell: UICollectionViewCell {
         moviePoster.layer.cornerRadius = 5.0
         moviePoster.layer.borderColor = UIColor.systemBlue.cgColor
         moviePoster.layer.borderWidth = 2.0
-        contentView.layer.cornerRadius = 5.0
-        contentView.layer.masksToBounds = true
-        layer.cornerRadius = 10.0
-        layer.masksToBounds = false
-        layer.shadowRadius = 8.0
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.1
-        layer.shadowOffset = CGSize(width: 0, height: 5)
     }
     
     override func layoutSubviews() {
-            super.layoutSubviews()
-            layer.shadowPath = UIBezierPath(
-                roundedRect: bounds,
-                cornerRadius: 5.0
-            ).cgPath
+        super.layoutSubviews()
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 10.0
+        contentView.layer.masksToBounds = true
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+        layer.shadowRadius = 8.0
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 5)
     }
 }
