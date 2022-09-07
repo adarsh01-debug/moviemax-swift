@@ -141,6 +141,18 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
             }
+            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    self.loadImage(poster) { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        cell.moviePoster.image = image
+                        self.cache.setObject(image, forKey: itemNumber)
+                    }
+                }
+            }
             return cell
         } else {
             guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieGridCollectionViewCell", for: indexPath) as? MovieGridCollectionViewCell else {
@@ -167,6 +179,18 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             } else {
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
+            }
+            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    self.loadImage(poster) { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        cell.moviePoster.image = image
+                        self.cache.setObject(image, forKey: itemNumber)
+                    }
+                }
             }
             return cell
         }
@@ -210,37 +234,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if isListView {
-            guard let cell = cell as? MovieCollectionViewCell else { return }
-            let basicDetail: Search? = movieData[indexPath.row]
-            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.moviePoster.image = cachedImage
-            } else {
-                if let poster = basicDetail?.poster {
-                    self.loadImage(poster) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        cell.moviePoster.image = image
-                        self.cache.setObject(image, forKey: itemNumber)
-                    }
-                }
-            }
-        } else {
-            guard let cell = cell as? MovieGridCollectionViewCell else { return }
-            let basicDetail: Search? = movieData[indexPath.row]
-            let itemNumber = NSString(string: basicDetail?.imdbID ?? "")
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.moviePoster.image = cachedImage
-            } else {
-                if let poster = basicDetail?.poster {
-                    self.loadImage(poster) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        cell.moviePoster.image = image
-                        self.cache.setObject(image, forKey: itemNumber)
-                    }
-                }
-            }
-        }
         if indexPath.row == (movieData.count - 5) {
             if let text = initialMovie {
                 currentPage = currentPage + 1
