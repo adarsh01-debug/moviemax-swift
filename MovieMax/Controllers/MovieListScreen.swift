@@ -298,6 +298,9 @@ extension MovieListScreen: UISearchBarDelegate {
                 self.movieAPI.fecthMovieDetails(movieTitle: searchText, page: 1, completion: { (movie) in
                     self.movieData = movie
                     self.movieCollectionView.reloadData()
+                    if (self.movieData.count > 0) {
+                        self.movieCollectionView.setContentOffset(.zero, animated: false)
+                    }
                 })
             }
         }
