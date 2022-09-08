@@ -8,9 +8,16 @@
 import Foundation
 
 struct ItemDetailModel: Codable {
-    var Title: String?
-    var Poster: String?
-    var Plot: String?
-    var Language: String?
+    var title: String?
+    var poster: String?
+    var plot: String?
+    var language: String?
     var imdbRating: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case title = "Title"
+        case poster = "Poster"
+        case plot = "Plot"
+        case language = "Language"
+    }
 }

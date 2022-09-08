@@ -13,7 +13,7 @@ class MovieDetailAPI {
     
     func fetchSpecificDetailApi (imdbID: String, completion: @escaping ((ItemDetailModel)->())){
         let urlString = "\(detailApiUrl)\(imdbID)"
-        if let url = URL(string: urlString){
+        if let url = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) {[weak self] (data,response,error) in
                 if error != nil {

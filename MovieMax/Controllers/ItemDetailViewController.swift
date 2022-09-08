@@ -92,7 +92,7 @@ class ItemDetailViewController: UITableViewController {
             movieDetailAPI.fetchSpecificDetailApi(imdbID: imdbID, completion: { (movie) in
                 self.movie = movie
                 self.setData()
-                self.activityIndicator.stopAnimating()
+                self.contentView.willRemoveSubview(self.animatorView)
                 self.animatorView.isHidden = true
                 self.tableView.reloadData()
             })
@@ -108,17 +108,17 @@ class ItemDetailViewController: UITableViewController {
     
     @objc func refresh(sender:AnyObject) {
         tableView.reloadData()
-        self.refreshControl!.endRefreshing()
+        self.refreshControl?.endRefreshing()
     }
     
     fileprivate func setData() {
-        if let urlString = movie.Poster, let url = URL(string: urlString) {
-            if let language = movie.Language {
+        if let urlString = movie.poster, let url = URL(string: urlString) {
+            if let language = movie.language {
                 movieLanguageLabel.text = "Language: \(language)"
             }
             moviePoster.load(url: url)
-            movieTitleLabel.text = movie.Title
-            moviePlotLabel.text = movie.Plot
+            movieTitleLabel.text = movie.title
+            moviePlotLabel.text = movie.plot
             if let rating = movie.imdbRating {
                 movieRatingLabel.text = "Rating: \(rating) ⭐"
             }

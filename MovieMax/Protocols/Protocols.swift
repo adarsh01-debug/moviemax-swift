@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ResponseStatus: AnyObject {
+protocol ResponseProtocol: AnyObject {
     func sendStatus(response: String?)
 }
 

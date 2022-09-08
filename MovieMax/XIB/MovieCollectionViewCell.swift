@@ -68,8 +68,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
         if let type = typeOfObject.text {
             if type == TypeEnum.movie.rawValue {
                 imageOfObject.image = UIImage(systemName: "video.fill")
-            } else {
+            } else if type == TypeEnum.series.rawValue {
                 imageOfObject.image = UIImage(systemName: "tv")
+            } else {
+                imageOfObject.image = UIImage(systemName: "underline")
             }
         }
     }

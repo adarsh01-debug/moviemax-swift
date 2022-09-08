@@ -10,11 +10,11 @@ import Foundation
 class MovieAPI {
     
     private let baseURL = "https://www.omdbapi.com/?apikey=fd12ab17"
-    weak var delegate: ResponseStatus?
+    weak var delegate: ResponseProtocol?
     
     func fecthMovieDetails (movieTitle: String, page: Int, completion: @escaping (([Search])->())) {
         let urlString = "\(baseURL)&s=\(movieTitle)&page=\(page)"
-        if let url = URL(string: urlString){
+        if let url = URL(string: urlString) {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) {[weak self] (data, response, error) in
                 if error != nil{
@@ -32,6 +32,7 @@ class MovieAPI {
             task.resume()
         } else {
             print("invalid url")
+            delegate?.sendStatus(response: "invalid url")
         }
     }
     

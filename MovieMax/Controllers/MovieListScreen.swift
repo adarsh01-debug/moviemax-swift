@@ -7,6 +7,8 @@
 
 import UIKit
 
+private var directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+let fileURL = URL(fileURLWithPath: "Watchlist", relativeTo: directoryURL).appendingPathExtension("txt")
 class MovieListScreen: UIViewController {
     
     // MARK: - Outlets
@@ -17,6 +19,9 @@ class MovieListScreen: UIViewController {
     // MARK: - Variables
     private let cache = NSCache<NSString, UIImage>()
     private let utilityQueue = DispatchQueue.global(qos: .utility)
+    private var workItem: DispatchWorkItem?
+    private let activityIndicator = UIActivityIndicatorView()
+    let imdbIDToBeStored: String = ""
     static var watchList: [String] = []
     var movieData: [Search] = []
     var initialMovie: String?
@@ -251,11 +256,11 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
 }
 
 // MARK: - Response Extension
-extension MovieListScreen: ResponseStatus {
+extension MovieListScreen: ResponseProtocol {
     func sendStatus(response: String?) {
         DispatchQueue.main.async {
             let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.movieCollectionView.bounds.size.width, height: self.movieCollectionView.bounds.size.height))
-            if response == "The data couldn’t be read because it is missing." {
+            if response == "The data couldn’t be read because it is missing." || response == "invalid url" {
                 noDataLabel.text = "No Result Found. :("
                 noDataLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
                 noDataLabel.textColor = UIColor.black
@@ -283,12 +288,28 @@ extension MovieListScreen: WatchListProtocol {
             return false
         } else {
             MovieListScreen.watchList.append(imdbID)
+            storeIDToFile(imdbID: imdbID)
             return true
         }
     }
     
     func reloadController() {
-        movieCollectionView.reloadData()
+        DispatchQueue.main.async {
+            self.movieCollectionView.reloadData()
+        }
+    }
+    
+    func storeIDToFile(imdbID: String) {
+        guard let data = imdbID.data(using: .utf8) else {
+            print("Unable to convert string to data")
+            return
+        }
+        do {
+         try data.write(to: fileURL)
+         print("File saved: \(fileURL.absoluteURL)")
+        } catch {
+         print(error.localizedDescription)
+        }
     }
 }
 
@@ -298,16 +319,23 @@ extension MovieListScreen: UISearchBarDelegate {
         if searchText.count >= 3 {
             initialMovie = searchText
             currentPage = 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.movieAPI.fecthMovieDetails(movieTitle: searchText, page: 1, completion: { (movie) in
-                    self.movieData = movie
-                    self.movieCollectionView.reloadData()
-                    if (self.movieData.count > 0) {
-                        self.movieCollectionView.setContentOffset(.zero, animated: false)
-                    }
-                })
-            }
+            getResults(searchText)
         }
+    }
+    
+    func getResults(_ text: String) {
+        workItem?.cancel()
+        let newWorkItem = DispatchWorkItem {
+            self.movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { (movie) in
+                self.movieData = movie
+                self.movieCollectionView.reloadData()
+                if (self.movieData.count > 0) {
+                    self.movieCollectionView.setContentOffset(.zero, animated: false)
+                }
+            })
+        }
+        workItem = newWorkItem
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3, execute: newWorkItem)
     }
 }
 

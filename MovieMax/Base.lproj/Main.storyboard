@@ -157,7 +157,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="movieCollectionView" destination="XP2-mF-FJY" id="nOg-zo-mn4"/>
+                        <outlet property="movieCollectionView" destination="XP2-mF-FJY" id="rs6-bG-ESG"/>
                         <outlet property="movieSearchBar" destination="ZFw-IU-VsY" id="QJz-8f-TmD"/>
                         <outlet property="viewToggleButton" destination="Ch1-ur-D2f" id="P2T-LM-uSo"/>
                     </connections>

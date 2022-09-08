@@ -21,6 +21,7 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: - Actions
     @IBAction func searchButtonAction(_ sender: Any) {
         if let text = searchTextField.text {
+            self.tableView.isUserInteractionEnabled = false
             movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { (movie) in
                 if let movieListScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieListScreen") as? MovieListScreen {
                     movieListScreen.movieData = movie
@@ -47,6 +48,7 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tableView.isUserInteractionEnabled = true
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
@@ -64,13 +66,14 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
 }
 
 // MARK: - Response Extension
-extension HomeTableViewController: ResponseStatus {
+extension HomeTableViewController: ResponseProtocol {
     func sendStatus(response: String?) {
         DispatchQueue.main.async {
             if response == "The data couldn’t be read because it is missing." {
                 let alert = UIAlertController(title: "Hein ji?", message: "There is no such movie/show on this earth.", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
+                self.tableView.isUserInteractionEnabled = true
             }
         }
     }
