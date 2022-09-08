@@ -94,6 +94,7 @@
             </constraints>
             <size key="customSize" width="310" height="452"/>
             <connections>
+                <outlet property="imageOfObject" destination="I4z-5M-fe2" id="YLf-76-yZS"/>
                 <outlet property="moviePoster" destination="gE0-nS-TDe" id="dUD-mn-YZ8"/>
                 <outlet property="movieTitle" destination="Ms9-sd-bnZ" id="ByD-WO-xJW"/>
                 <outlet property="typeOfObject" destination="KKW-Vp-ARc" id="gG1-bi-y2j"/>

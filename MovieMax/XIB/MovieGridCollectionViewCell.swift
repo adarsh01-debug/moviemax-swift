@@ -12,6 +12,7 @@ class MovieGridCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet var moviePoster: UIImageView!
     @IBOutlet var movieTitle: UILabel!
+    @IBOutlet var imageOfObject: UIImageView!
     @IBOutlet var yearOfRelease: UILabel!
     @IBOutlet var typeOfObject: UILabel!
     @IBOutlet var watchListButton: UIButton!
@@ -56,5 +57,16 @@ class MovieGridCollectionViewCell: UICollectionViewCell {
         layer.shadowColor = UIColor.lightGray.cgColor
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 0, height: 5)
+        updateData()
+    }
+    
+    private func updateData() {
+        if let type = typeOfObject.text {
+            if type == TypeEnum.movie.rawValue {
+                imageOfObject.image = UIImage(systemName: "video.fill")
+            } else {
+                imageOfObject.image = UIImage(systemName: "tv")
+            }
+        }
     }
 }
