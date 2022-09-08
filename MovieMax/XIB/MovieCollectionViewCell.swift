@@ -49,7 +49,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         moviePoster.layer.cornerRadius = 5.0
         moviePoster.layer.borderColor = UIColor.systemBlue.cgColor
         moviePoster.layer.borderWidth = 2.0
-        updateData()
     }
     
     override func layoutSubviews() {
@@ -62,13 +61,14 @@ class MovieCollectionViewCell: UICollectionViewCell {
         layer.shadowColor = UIColor.lightGray.cgColor
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 0, height: 5)
+        updateData()
     }
 
     private func updateData() {
         if let type = typeOfObject.text {
             if type == TypeEnum.movie.rawValue {
                 imageOfObject.image = UIImage(systemName: "video.fill")
-            } else if type == TypeEnum.series.rawValue {
+            } else {
                 imageOfObject.image = UIImage(systemName: "tv")
             }
         }
