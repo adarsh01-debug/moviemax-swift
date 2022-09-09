@@ -105,6 +105,21 @@ class MovieListScreen: UIViewController {
             }
         }
     }
+    
+    fileprivate func addLoader() {
+        animatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        animatorView.addSubview(activityIndicator)
+        view.addSubview(animatorView)
+        animatorView.topAnchor.constraint(equalTo: movieCollectionView.bottomAnchor).isActive = true
+        animatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50.0).isActive = true
+        animatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        animatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: animatorView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: animatorView.centerYAnchor).isActive = true
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+    }
 }
 
 // MARK: - CollectionView Extension
@@ -247,31 +262,16 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         if indexPath.row == (movieData.count - 5) {
             if let text = initialMovie {
                 currentPage = currentPage + 1
-                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { (movie) in
-                    self.movieData.append(contentsOf: movie)
-                    self.movieCollectionView.reloadData()
-                    self.animatorView.removeFromSuperview()
+                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { [weak self] (movie) in
+                    self?.movieData.append(contentsOf: movie)
+                    self?.movieCollectionView.reloadData()
+                    self?.animatorView.removeFromSuperview()
                 })
             }
         }
         if (indexPath.row == movieData.count - 1 ) {
             addLoader()
         }
-    }
-    
-    fileprivate func addLoader() {
-        animatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        animatorView.addSubview(activityIndicator)
-        view.addSubview(animatorView)
-        animatorView.topAnchor.constraint(equalTo: movieCollectionView.bottomAnchor).isActive = true
-        animatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50.0).isActive = true
-        animatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        animatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        activityIndicator.centerXAnchor.constraint(equalTo: animatorView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: animatorView.centerYAnchor).isActive = true
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
     }
 }
 
