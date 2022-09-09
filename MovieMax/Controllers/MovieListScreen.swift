@@ -21,6 +21,7 @@ class MovieListScreen: UIViewController {
     private let utilityQueue = DispatchQueue.global(qos: .utility)
     private var workItem: DispatchWorkItem?
     private let activityIndicator = UIActivityIndicatorView()
+    private var animatorView = UIView()
     let imdbIDToBeStored: String = ""
     static var watchList: [String] = []
     var movieData: [Search] = []
@@ -249,9 +250,28 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { (movie) in
                     self.movieData.append(contentsOf: movie)
                     self.movieCollectionView.reloadData()
+                    self.animatorView.removeFromSuperview()
                 })
             }
         }
+        if (indexPath.row == movieData.count - 1 ) {
+            addLoader()
+        }
+    }
+    
+    fileprivate func addLoader() {
+        animatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        animatorView.addSubview(activityIndicator)
+        view.addSubview(animatorView)
+        animatorView.topAnchor.constraint(equalTo: movieCollectionView.bottomAnchor).isActive = true
+        animatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50.0).isActive = true
+        animatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        animatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        activityIndicator.centerXAnchor.constraint(equalTo: animatorView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: animatorView.centerYAnchor).isActive = true
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
     }
 }
 
@@ -326,11 +346,11 @@ extension MovieListScreen: UISearchBarDelegate {
     func getResults(_ text: String) {
         workItem?.cancel()
         let newWorkItem = DispatchWorkItem {
-            self.movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { (movie) in
-                self.movieData = movie
-                self.movieCollectionView.reloadData()
-                if (self.movieData.count > 0) {
-                    self.movieCollectionView.setContentOffset(.zero, animated: false)
+            self.movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { [weak self] (movie) in
+                self?.movieData = movie
+                self?.movieCollectionView.reloadData()
+                if ((self?.movieData.count ?? 0) > 0) {
+                    self?.movieCollectionView.setContentOffset(.zero, animated: false)
                 }
             })
         }

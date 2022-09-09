@@ -22,13 +22,13 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func searchButtonAction(_ sender: Any) {
         if let text = searchTextField.text {
             self.tableView.isUserInteractionEnabled = false
-            movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { (movie) in
+            movieAPI.fecthMovieDetails(movieTitle: text, page: 1, completion: { [weak self] (movie) in
                 if let movieListScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieListScreen") as? MovieListScreen {
                     movieListScreen.movieData = movie
                     movieListScreen.initialMovie = text
-                    self.searchTextField.text = ""
-                    self.searchTextField.resignFirstResponder()
-                    self.navigationController?.pushViewController(movieListScreen, animated: true)
+                    self?.searchTextField.text = ""
+                    self?.searchTextField.resignFirstResponder()
+                    self?.navigationController?.pushViewController(movieListScreen, animated: true)
                 }
             })
         } else {

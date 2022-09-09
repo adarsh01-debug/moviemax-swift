@@ -92,8 +92,7 @@ class ItemDetailViewController: UITableViewController {
             movieDetailAPI.fetchSpecificDetailApi(imdbID: imdbID, completion: { (movie) in
                 self.movie = movie
                 self.setData()
-                self.contentView.willRemoveSubview(self.animatorView)
-                self.animatorView.isHidden = true
+                self.animatorView.removeFromSuperview()
                 self.tableView.reloadData()
             })
         }
