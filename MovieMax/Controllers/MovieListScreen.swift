@@ -7,8 +7,6 @@
 
 import UIKit
 
-private var directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-let fileURL = URL(fileURLWithPath: "Watchlist", relativeTo: directoryURL).appendingPathExtension("txt")
 class MovieListScreen: UIViewController {
     
     // MARK: - Outlets
@@ -162,17 +160,16 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
             }
-            if let posterURL = basicDetail?.imdbID {
-                let itemNumber = NSString(string: posterURL)
+            if let imdb = basicDetail?.imdbID {
+                let itemNumber = NSString(string: imdb)
                 if let cachedImage = self.cache.object(forKey: itemNumber) {
                     cell.moviePoster.image = cachedImage
                 } else {
                     if let poster = basicDetail?.poster {
-                        self.loadImage(poster) { [weak self] (image) in
+                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(systemName: "person.fill"), completion: { [weak self] (image) in
                             guard let self = self, let image = image else { return }
-                            cell.moviePoster.image = image
                             self.cache.setObject(image, forKey: itemNumber)
-                        }
+                        })
                     }
                 }
             }
@@ -203,17 +200,16 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.watchListButton.backgroundColor = .red
                 cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
             }
-            if let posterURL = basicDetail?.imdbID {
-                let itemNumber = NSString(string: posterURL)
+            if let imdb = basicDetail?.imdbID {
+                let itemNumber = NSString(string: imdb)
                 if let cachedImage = self.cache.object(forKey: itemNumber) {
                     cell.moviePoster.image = cachedImage
                 } else {
                     if let poster = basicDetail?.poster {
-                        self.loadImage(poster) { [weak self] (image) in
+                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(systemName: "person.fill"), completion: { [weak self] (image) in
                             guard let self = self, let image = image else { return }
-                            cell.moviePoster.image = image
                             self.cache.setObject(image, forKey: itemNumber)
-                        }
+                        })
                     }
                 }
             }
@@ -285,6 +281,7 @@ extension MovieListScreen: ResponseProtocol {
                 noDataLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
                 noDataLabel.textColor = UIColor.black
                 noDataLabel.textAlignment = .center
+                self.animatorView.removeFromSuperview()
                 self.movieCollectionView.backgroundView  = noDataLabel
                 self.movieCollectionView.backgroundColor = UIColor.white
                 self.movieData.removeAll()
@@ -308,7 +305,6 @@ extension MovieListScreen: WatchListProtocol {
             return false
         } else {
             MovieListScreen.watchList.append(imdbID)
-            storeIDToFile(imdbID: imdbID)
             return true
         }
     }
@@ -316,19 +312,6 @@ extension MovieListScreen: WatchListProtocol {
     func reloadController() {
         DispatchQueue.main.async {
             self.movieCollectionView.reloadData()
-        }
-    }
-    
-    func storeIDToFile(imdbID: String) {
-        guard let data = imdbID.data(using: .utf8) else {
-            print("Unable to convert string to data")
-            return
-        }
-        do {
-         try data.write(to: fileURL)
-         print("File saved: \(fileURL.absoluteURL)")
-        } catch {
-         print(error.localizedDescription)
         }
     }
 }
@@ -370,6 +353,33 @@ extension UIImageView {
                     }
                 }
             }
+        }
+    }
+}
+
+extension UIImageView {
+    func imageFromServerURL(_ URLString: String, placeHolder: UIImage?, completion: @escaping (UIImage?) -> ()) {
+        self.image = nil
+        let imageServerUrl = URLString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        if let url = URL(string: imageServerUrl) {
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                if error != nil {
+                    print("ERROR LOADING IMAGES FROM URL: \(String(describing: error))")
+                    DispatchQueue.main.async {
+                        self.image = placeHolder
+                        completion(self.image)
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    if let data = data {
+                        if let downloadedImage = UIImage(data: data) {
+                            self.image = downloadedImage
+                            completion(self.image)
+                        }
+                    }
+                }
+            }).resume()
         }
     }
 }
