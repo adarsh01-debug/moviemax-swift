@@ -194,9 +194,9 @@
 		75C3066B28C2405A00CF4ACC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				753CC4DC28CF029500DCB070 /* HomeViewController.swift */,
 				75368EC428C33B3000B47BF8 /* MovieListScreen.swift */,
 				753B9A1028C3D5A300DC5D07 /* ItemDetailViewController.swift */,
-				753CC4DC28CF029500DCB070 /* HomeViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

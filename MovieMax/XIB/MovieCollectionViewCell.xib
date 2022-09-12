@@ -17,8 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="704" height="233"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cFG-05-5RY">
-                        <rect key="frame" x="10" y="50.5" width="141" height="160"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="cFG-05-5RY">
+                        <rect key="frame" x="10" y="49" width="141" height="163"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The Spider Man Movie: Far From Home" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="inQ-ju-zZS">
                         <rect key="frame" x="161" y="49" width="361" height="24"/>
@@ -97,7 +97,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="person.fill" catalog="system" width="128" height="120"/>
+        <image name="placeholder" width="800" height="661"/>
         <image name="video.fill" catalog="system" width="128" height="82"/>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
