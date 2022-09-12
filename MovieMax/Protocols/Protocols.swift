@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol ResponseProtocol: AnyObject {
-    func sendStatus(response: String?)
-}
-
 protocol WatchListProtocol: AnyObject {
     func addToWatchList(imdbID: String) -> Bool
     func reloadController()

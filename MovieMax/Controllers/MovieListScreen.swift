@@ -55,8 +55,8 @@ class MovieListScreen: UIViewController {
         movieCollectionView.dataSource = self
         registerCustomViewInCell()
         movieSearchBar.delegate = self
-        movieAPI.delegate = self
         pullToRefresh()
+        getStatus()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -117,6 +117,31 @@ class MovieListScreen: UIViewController {
         activityIndicator.centerYAnchor.constraint(equalTo: animatorView.centerYAnchor).isActive = true
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
+    }
+    
+    fileprivate func getStatus() {
+        movieAPI.responseStatusClosure = { [weak self] (response) in
+            DispatchQueue.main.async {
+                let noDataLabel: UILabel = UILabel(frame: CGRect.init(x: 0, y: 0, width: self?.movieCollectionView.bounds.height ?? 0, height: self?.movieCollectionView.bounds.height ?? 0))
+                if response == false {
+                    noDataLabel.text = "No Result Found. :("
+                    noDataLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
+                    noDataLabel.textColor = UIColor.black
+                    noDataLabel.textAlignment = .center
+                    self?.movieCollectionView.backgroundView  = noDataLabel
+                    self?.movieCollectionView.backgroundColor = UIColor.white
+                    self?.movieData.removeAll()
+                    self?.totalPages = 0
+                    self?.movieCollectionView.reloadData()
+                } else {
+                    noDataLabel.text = ""
+                    self?.movieCollectionView.backgroundView = nil
+                    self?.movieCollectionView.backgroundColor = UIColor.clear
+                    self?.movieCollectionView.reloadData()
+                }
+                self?.animatorView.removeFromSuperview()
+            }
+        }
     }
 }
 
@@ -267,32 +292,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         }
         if (indexPath.row == movieData.count - 1 ) {
             addLoader()
-        }
-    }
-}
-
-// MARK: - Response Extension
-extension MovieListScreen: ResponseProtocol {
-    func sendStatus(response: String?) {
-        DispatchQueue.main.async {
-            let noDataLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.movieCollectionView.bounds.size.width, height: self.movieCollectionView.bounds.size.height))
-            if response == "The data couldn’t be read because it is missing." || response == "invalid url" {
-                noDataLabel.text = "No Result Found. :("
-                noDataLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
-                noDataLabel.textColor = UIColor.black
-                noDataLabel.textAlignment = .center
-                self.animatorView.removeFromSuperview()
-                self.movieCollectionView.backgroundView  = noDataLabel
-                self.movieCollectionView.backgroundColor = UIColor.white
-                self.movieData.removeAll()
-                self.totalPages = 0
-                self.movieCollectionView.reloadData()
-            } else {
-                noDataLabel.text = ""
-                self.movieCollectionView.backgroundView = nil
-                self.movieCollectionView.backgroundColor = UIColor.clear
-                self.movieCollectionView.reloadData()
-            }
         }
     }
 }
