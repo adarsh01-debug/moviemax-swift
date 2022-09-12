@@ -10,7 +10,7 @@ import Foundation
 class MovieAPI {
     
     private let baseURL = "https://www.omdbapi.com/?apikey=fd12ab17"
-    weak var delegate: ResponseProtocol?
+    var responseStatusClosure: ((Bool) -> ())?
     
     func fecthMovieDetails (movieTitle: String, page: Int, completion: @escaping (([Search])->())) {
         let urlString = "\(baseURL)&s=\(movieTitle)&page=\(page)"
@@ -32,7 +32,8 @@ class MovieAPI {
             task.resume()
         } else {
             print("invalid url")
-            delegate?.sendStatus(response: "invalid url")
+            guard let completionBlock = responseStatusClosure else {return}
+            completionBlock(false)
         }
     }
     
@@ -41,11 +42,13 @@ class MovieAPI {
         do {
             let decodeData = try decoder.decode(MovieMax.self, from: movieData)
             let Search = decodeData.search
-            delegate?.sendStatus(response: "all good")
+            guard let completionBlock = responseStatusClosure else {return nil}
+            completionBlock(true)
             return Search
         } catch {
             print(error.localizedDescription)
-            delegate?.sendStatus(response: error.localizedDescription)
+            guard let completionBlock = responseStatusClosure else {return nil}
+            completionBlock(false)
             return nil
         }
     }

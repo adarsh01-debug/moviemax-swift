@@ -40,10 +40,10 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchTextField.delegate = self
-        movieAPI.delegate = self
         searchButton.layer.cornerRadius = 10.0
         banner.layer.cornerRadius = 20.0
         banner.clipsToBounds = true
+        showAlert()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,17 +63,16 @@ class HomeTableViewController: UITableViewController, UITextFieldDelegate {
         }
         return UIScreen.main.bounds.height
     }
-}
-
-// MARK: - Response Extension
-extension HomeTableViewController: ResponseProtocol {
-    func sendStatus(response: String?) {
-        DispatchQueue.main.async {
-            if response == "The data couldn’t be read because it is missing." {
-                let alert = UIAlertController(title: "Hein ji?", message: "There is no such movie/show on this earth.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                self.tableView.isUserInteractionEnabled = true
+    
+    fileprivate func showAlert() {
+        movieAPI.responseStatusClosure = { [weak self] (response) in
+            DispatchQueue.main.async {
+                if response == false {
+                    let alert = UIAlertController(title: "Hein ji?", message: "There is no such movie/show on this earth.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                    self?.present(alert, animated: true, completion: nil)
+                    self?.tableView.isUserInteractionEnabled = true
+                }
             }
         }
     }
