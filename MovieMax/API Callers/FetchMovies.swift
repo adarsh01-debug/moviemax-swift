@@ -22,7 +22,7 @@ class MovieAPI {
                     return
                 }
                 if let safeData = data{
-                    if let movie = self?.parseJson(safeData) {
+                    if let movie = self?.parseJson(safeData, page) {
                         DispatchQueue.main.async {
                             completion(movie)
                         }
@@ -37,7 +37,7 @@ class MovieAPI {
         }
     }
     
-    private func parseJson(_ movieData: Data) -> [Search]? {
+    private func parseJson(_ movieData: Data, _ page: Int) -> [Search]? {
         let decoder = JSONDecoder()
         do {
             let decodeData = try decoder.decode(MovieMax.self, from: movieData)
@@ -47,8 +47,10 @@ class MovieAPI {
             return Search
         } catch {
             print(error.localizedDescription)
-            guard let completionBlock = responseStatusClosure else {return nil}
-            completionBlock(false)
+            if page == 1 {
+                guard let completionBlock = responseStatusClosure else {return nil}
+                completionBlock(false)
+            }
             return nil
         }
     }
