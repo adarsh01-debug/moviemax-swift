@@ -96,17 +96,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if UIDevice.current.orientation.isLandscape {
             if indexPath.row == 0 {
-                return UIScreen.main.bounds.height
+                return UIScreen.main.bounds.height * 1.5
             } else if indexPath.row == 1 {
                 return UIScreen.main.bounds.height / 4
             } else {
                 return UIScreen.main.bounds.height / 4
             }
-        }
-        if indexPath.row == 0 {
-            return UIScreen.main.bounds.height / 2
         } else {
-            return UIScreen.main.bounds.height / 5
+            if indexPath.row == 0 {
+                return UIScreen.main.bounds.height / 2
+            } else {
+                return UIScreen.main.bounds.height / 5
+            }
         }
     }
     
