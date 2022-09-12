@@ -9,8 +9,10 @@ import UIKit
 
 class HomeViewController: UIViewController, UITextFieldDelegate {
 
+    // MARK: - Outlets
     @IBOutlet var homeTableView: UITableView!
     
+    // MARK: - Variables
     var searchedText: String?
     private let movieAPI = MovieAPI()
     private var movieData: [Search] = []
@@ -18,6 +20,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     private let searchTextFieldKCellIdentifier = "SearchTextFieldTableViewCell"
     private let searchButtonKCellIdentifier = "SearchButtonTableViewCell"
     
+    // MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         homeTableView.delegate = self
@@ -55,6 +58,7 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+// MARK: - TableView Extenison
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     private func registerCustomViewInCell() {
         let bannerNib = UINib(nibName: bannerKCellIdentifier, bundle: nil)
