@@ -61,6 +61,7 @@ class MovieListScreen: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        movieSearchBar.text = initialMovie
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
@@ -290,7 +291,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                 })
             }
         }
-        if (indexPath.row == movieData.count - 1 ) {
+        if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
             addLoader()
         }
     }
