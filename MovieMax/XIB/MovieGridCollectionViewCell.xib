@@ -17,8 +17,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="310" height="452"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gE0-nS-TDe">
-                        <rect key="frame" x="101" y="50.5" width="108.5" height="178"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="gE0-nS-TDe">
+                        <rect key="frame" x="101" y="49" width="108.5" height="181"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ms9-sd-bnZ">
                         <rect key="frame" x="131.5" y="240" width="47" height="21.5"/>
@@ -105,7 +105,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="person.fill" catalog="system" width="128" height="120"/>
+        <image name="placeholder" width="800" height="661"/>
         <image name="video.fill" catalog="system" width="128" height="82"/>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

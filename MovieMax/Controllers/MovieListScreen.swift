@@ -124,7 +124,7 @@ class MovieListScreen: UIViewController {
     fileprivate func getStatus() {
         movieAPI.responseStatusClosure = { [weak self] (response) in
             DispatchQueue.main.async {
-                let noDataLabel: UILabel = UILabel(frame: CGRect.init(x: 0, y: 0, width: self?.movieCollectionView.bounds.height ?? 0, height: self?.movieCollectionView.bounds.height ?? 0))
+                let noDataLabel: UILabel = UILabel(frame: CGRect.init(x: 0, y: 0, width: self?.movieCollectionView.bounds.width ?? 0, height: self?.movieCollectionView.bounds.height ?? 0))
                 if response == false {
                     noDataLabel.text = "No Result Found. :("
                     noDataLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
@@ -193,7 +193,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                     cell.moviePoster.image = cachedImage
                 } else {
                     if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(systemName: "person.fill"), completion: { [weak self] (image) in
+                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
                             guard let self = self, let image = image else { return }
                             self.cache.setObject(image, forKey: itemNumber)
                         })
@@ -233,7 +233,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                     cell.moviePoster.image = cachedImage
                 } else {
                     if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(systemName: "person.fill"), completion: { [weak self] (image) in
+                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
                             guard let self = self, let image = image else { return }
                             self.cache.setObject(image, forKey: itemNumber)
                         })
