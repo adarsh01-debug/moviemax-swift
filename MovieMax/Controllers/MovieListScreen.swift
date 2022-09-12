@@ -166,80 +166,14 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieCollectionViewIndetifier, for: indexPath) as? MovieCollectionViewCell else {
                     return UICollectionViewCell()
             }
-            let basicDetail: Search? = movieData[indexPath.row]
-            cell.movieTitle.text = basicDetail?.title
-            if let year = basicDetail?.year {
-                cell.yearOfRelease.text = "Released Year: \(year)"
-            } else {
-                cell.yearOfRelease.text = "Released Year: NA"
-            }
-            if let type = basicDetail?.type {
-                cell.typeOfObject.text = type.rawValue
-            } else {
-                cell.typeOfObject.text = "Unknown"
-            }
-            cell.imdbID = basicDetail?.imdbID
-            cell.delegate = self
-            if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
-                cell.watchListButton.backgroundColor = .green
-                cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
-            } else {
-                cell.watchListButton.backgroundColor = .red
-                cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
-            }
-            if let imdb = basicDetail?.imdbID {
-                let itemNumber = NSString(string: imdb)
-                if let cachedImage = self.cache.object(forKey: itemNumber) {
-                    cell.moviePoster.image = cachedImage
-                } else {
-                    if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
-                            guard let self = self, let image = image else { return }
-                            self.cache.setObject(image, forKey: itemNumber)
-                        })
-                    }
-                }
-            }
+            setCellForListView(indexPath, cell)
             return cell
         } else {
             guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieGridCollectionViewIndetifier, for: indexPath) as? MovieGridCollectionViewCell else {
                     return UICollectionViewCell()
             }
             cell.watchListButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
-            let basicDetail: Search? = movieData[indexPath.row]
-            cell.movieTitle.text = basicDetail?.title
-            if let year = basicDetail?.year {
-                cell.yearOfRelease.text = "Released Year: \(year)"
-            } else {
-                cell.yearOfRelease.text = "Released Year: NA"
-            }
-            if let type = basicDetail?.type {
-                cell.typeOfObject.text = type.rawValue
-            } else {
-                cell.typeOfObject.text = "Unknown"
-            }
-            cell.imdbID = basicDetail?.imdbID
-            cell.delegate = self
-            if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
-                cell.watchListButton.backgroundColor = .green
-                cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
-            } else {
-                cell.watchListButton.backgroundColor = .red
-                cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
-            }
-            if let imdb = basicDetail?.imdbID {
-                let itemNumber = NSString(string: imdb)
-                if let cachedImage = self.cache.object(forKey: itemNumber) {
-                    cell.moviePoster.image = cachedImage
-                } else {
-                    if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
-                            guard let self = self, let image = image else { return }
-                            self.cache.setObject(image, forKey: itemNumber)
-                        })
-                    }
-                }
-            }
+            setCellForGridView(indexPath, cell)
             return cell
         }
     }
@@ -294,6 +228,80 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         }
         if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
             addLoader()
+        }
+    }
+    
+    fileprivate func setCellForListView(_ indexPath: IndexPath, _ cell: MovieCollectionViewCell) {
+        let basicDetail: Search? = movieData[indexPath.row]
+        cell.movieTitle.text = basicDetail?.title
+        if let year = basicDetail?.year {
+            cell.yearOfRelease.text = "Released Year: \(year)"
+        } else {
+            cell.yearOfRelease.text = "Released Year: NA"
+        }
+        if let type = basicDetail?.type {
+            cell.typeOfObject.text = type.rawValue
+        } else {
+            cell.typeOfObject.text = "Unknown"
+        }
+        cell.imdbID = basicDetail?.imdbID
+        cell.delegate = self
+        if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
+            cell.watchListButton.backgroundColor = .green
+            cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
+        } else {
+            cell.watchListButton.backgroundColor = .red
+            cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
+        }
+        if let imdb = basicDetail?.imdbID {
+            let itemNumber = NSString(string: imdb)
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        self.cache.setObject(image, forKey: itemNumber)
+                    })
+                }
+            }
+        }
+    }
+    
+    fileprivate func setCellForGridView(_ indexPath: IndexPath, _ cell: MovieGridCollectionViewCell) {
+        let basicDetail: Search? = movieData[indexPath.row]
+        cell.movieTitle.text = basicDetail?.title
+        if let year = basicDetail?.year {
+            cell.yearOfRelease.text = "Released Year: \(year)"
+        } else {
+            cell.yearOfRelease.text = "Released Year: NA"
+        }
+        if let type = basicDetail?.type {
+            cell.typeOfObject.text = type.rawValue
+        } else {
+            cell.typeOfObject.text = "Unknown"
+        }
+        cell.imdbID = basicDetail?.imdbID
+        cell.delegate = self
+        if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
+            cell.watchListButton.backgroundColor = .green
+            cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
+        } else {
+            cell.watchListButton.backgroundColor = .red
+            cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
+        }
+        if let imdb = basicDetail?.imdbID {
+            let itemNumber = NSString(string: imdb)
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        self.cache.setObject(image, forKey: itemNumber)
+                    })
+                }
+            }
         }
     }
 }
