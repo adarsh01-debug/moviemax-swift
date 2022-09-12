@@ -20,7 +20,8 @@ class MovieListScreen: UIViewController {
     private var workItem: DispatchWorkItem?
     private let activityIndicator = UIActivityIndicatorView()
     private var animatorView = UIView()
-    let imdbIDToBeStored: String = ""
+    private let movieCollectionViewIndetifier = "MovieCollectionViewCell"
+    private let movieGridCollectionViewIndetifier = "MovieGridCollectionViewCell"
     static var watchList: [String] = []
     var movieData: [Search] = []
     var initialMovie: String?
@@ -149,11 +150,11 @@ class MovieListScreen: UIViewController {
 // MARK: - CollectionView Extension
 extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private func registerCustomViewInCell() {
-        let nib = UINib(nibName: "MovieCollectionViewCell", bundle: nil)
-        movieCollectionView.register(nib, forCellWithReuseIdentifier: "MovieCollectionViewCell")
+        let nib = UINib(nibName: movieCollectionViewIndetifier, bundle: nil)
+        movieCollectionView.register(nib, forCellWithReuseIdentifier: movieCollectionViewIndetifier)
         
-        let gridNib = UINib(nibName: "MovieGridCollectionViewCell", bundle: nil)
-        movieCollectionView.register(gridNib, forCellWithReuseIdentifier: "MovieGridCollectionViewCell")
+        let gridNib = UINib(nibName: movieGridCollectionViewIndetifier, bundle: nil)
+        movieCollectionView.register(gridNib, forCellWithReuseIdentifier: movieGridCollectionViewIndetifier)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -162,7 +163,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isListView {
-            guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieCollectionViewCell", for: indexPath) as? MovieCollectionViewCell else {
+            guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieCollectionViewIndetifier, for: indexPath) as? MovieCollectionViewCell else {
                     return UICollectionViewCell()
             }
             let basicDetail: Search? = movieData[indexPath.row]
@@ -201,7 +202,7 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             }
             return cell
         } else {
-            guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieGridCollectionViewCell", for: indexPath) as? MovieGridCollectionViewCell else {
+            guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieGridCollectionViewIndetifier, for: indexPath) as? MovieGridCollectionViewCell else {
                     return UICollectionViewCell()
             }
             cell.watchListButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
