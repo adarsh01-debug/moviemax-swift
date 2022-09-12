@@ -100,7 +100,9 @@ class ItemDetailViewController: UITableViewController {
     
     fileprivate func pullToRefresh() {
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.attributedTitle = NSAttributedString(string: "Refreshing")
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.refreshControl?.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
+        self.refreshControl?.tintColor = .white
         self.refreshControl?.addTarget(self, action: #selector(refresh(sender:)), for: UIControl.Event.valueChanged)
         tableView.refreshControl = self.refreshControl
     }
