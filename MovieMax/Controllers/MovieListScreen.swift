@@ -145,6 +145,32 @@ class MovieListScreen: UIViewController {
             }
         }
     }
+    
+    func addToWatchListt(imdbID: String) -> Bool {
+        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
+            MovieListScreen.watchList.remove(at: indexOfMovie)
+            return false
+        } else {
+            MovieListScreen.watchList.append(imdbID)
+            return true
+        }
+    }
+    
+    func addFromDetails(imdbID: String) -> Bool {
+        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
+            MovieListScreen.watchList.remove(at: indexOfMovie)
+            DispatchQueue.main.async {
+                self.movieCollectionView.reloadData()
+            }
+            return false
+        } else {
+            MovieListScreen.watchList.append(imdbID)
+            DispatchQueue.main.async {
+                self.movieCollectionView.reloadData()
+            }
+            return true
+        }
+    }
 }
 
 // MARK: - CollectionView Extension
@@ -183,7 +209,9 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             if let itemDetailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ItemDetailViewController") as? ItemDetailViewController {
                 itemDetailViewController.imdbID = imdbID
                 itemDetailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
-                itemDetailViewController.delegate = self
+                itemDetailViewController.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+                    return (self?.addFromDetails(imdbID: imdbID) ?? false)
+                }
                 self.navigationController?.pushViewController(itemDetailViewController, animated: true)
                 }
         } else {
@@ -234,6 +262,9 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     fileprivate func setCellForListView(_ indexPath: IndexPath, _ cell: MovieCollectionViewCell) {
         let basicDetail: Search? = movieData[indexPath.row]
         cell.movieTitle.text = basicDetail?.title
+        cell.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+            return (self?.addToWatchListt(imdbID: imdbID) ?? false)
+        }
         if let year = basicDetail?.year {
             cell.yearOfRelease.text = "Released Year: \(year)"
         } else {
@@ -245,7 +276,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             cell.typeOfObject.text = "Unknown"
         }
         cell.imdbID = basicDetail?.imdbID
-        cell.delegate = self
         if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
             cell.watchListButton.backgroundColor = .green
             cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
@@ -271,6 +301,9 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     fileprivate func setCellForGridView(_ indexPath: IndexPath, _ cell: MovieGridCollectionViewCell) {
         let basicDetail: Search? = movieData[indexPath.row]
         cell.movieTitle.text = basicDetail?.title
+        cell.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+            return (self?.addToWatchListt(imdbID: imdbID) ?? false)
+        }
         if let year = basicDetail?.year {
             cell.yearOfRelease.text = "Released Year: \(year)"
         } else {
@@ -282,7 +315,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             cell.typeOfObject.text = "Unknown"
         }
         cell.imdbID = basicDetail?.imdbID
-        cell.delegate = self
         if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
             cell.watchListButton.backgroundColor = .green
             cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
@@ -302,25 +334,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
                     })
                 }
             }
-        }
-    }
-}
-
-// MARK: - WatchList Extension
-extension MovieListScreen: WatchListProtocol {
-    func addToWatchList(imdbID: String) -> Bool {
-        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
-            MovieListScreen.watchList.remove(at: indexOfMovie)
-            return false
-        } else {
-            MovieListScreen.watchList.append(imdbID)
-            return true
-        }
-    }
-    
-    func reloadController() {
-        DispatchQueue.main.async {
-            self.movieCollectionView.reloadData()
         }
     }
 }

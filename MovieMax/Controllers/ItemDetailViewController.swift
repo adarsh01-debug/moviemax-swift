@@ -25,7 +25,7 @@ class ItemDetailViewController: UITableViewController {
     private let movieDetailAPI = MovieDetailAPI()
     var imdbID: String?
     var isPresentInWatchList: Bool?
-    weak var delegate: WatchListProtocol?
+    var addToWatchListClosure: ((String) -> (Bool))?
     
     // MARK: - Actions
     @IBAction func doneActionButton(_ sender: Any) {
@@ -35,9 +35,9 @@ class ItemDetailViewController: UITableViewController {
     @IBAction func watchListButtonAction(_ sender: Any) {
         var addedToWatchList: Bool?
         if let imdbID = imdbID {
-            addedToWatchList = delegate?.addToWatchList(imdbID: imdbID)
+            guard let completionBlock = addToWatchListClosure else {return}
+            addedToWatchList = completionBlock(imdbID)
         }
-        
         if let addedToWatchList = addedToWatchList {
             if addedToWatchList == true {
                 watchListButtonOutlet.backgroundColor = UIColor.green
@@ -46,7 +46,6 @@ class ItemDetailViewController: UITableViewController {
                 watchListButtonOutlet.backgroundColor = UIColor.red
                 watchListButtonOutlet.setTitle("+", for: .normal)
             }
-            delegate?.reloadController()
         } else {
             print("Specific movie detail, added watchlist error")
         }

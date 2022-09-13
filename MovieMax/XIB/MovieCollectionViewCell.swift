@@ -21,13 +21,14 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // MARK: - Variables
     var imdbID: String?
     var type: String?
-    weak var delegate: WatchListProtocol?
+    var addToWatchListClosure: ((String) -> (Bool))?
     
     // MARK: - Actions
     @IBAction func watchListButtonAction(_ sender: Any) {
         var addedToWatchList: Bool?
         if let imdbID = imdbID {
-            addedToWatchList = delegate?.addToWatchList(imdbID: imdbID)
+            guard let completionBlock = addToWatchListClosure else {return}
+            addedToWatchList = completionBlock(imdbID)
         }
         if let addedToWatchList = addedToWatchList {
             if addedToWatchList == true {
