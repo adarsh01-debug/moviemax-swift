@@ -145,6 +145,32 @@ class MovieListScreen: UIViewController {
             }
         }
     }
+    
+    func addToWatchListt(imdbID: String) -> Bool {
+        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
+            MovieListScreen.watchList.remove(at: indexOfMovie)
+            return false
+        } else {
+            MovieListScreen.watchList.append(imdbID)
+            return true
+        }
+    }
+    
+    func addFromDetails(imdbID: String) -> Bool {
+        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
+            MovieListScreen.watchList.remove(at: indexOfMovie)
+            DispatchQueue.main.async {
+                self.movieCollectionView.reloadData()
+            }
+            return false
+        } else {
+            MovieListScreen.watchList.append(imdbID)
+            DispatchQueue.main.async {
+                self.movieCollectionView.reloadData()
+            }
+            return true
+        }
+    }
 }
 
 // MARK: - CollectionView Extension
@@ -166,80 +192,14 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieCollectionViewIndetifier, for: indexPath) as? MovieCollectionViewCell else {
                     return UICollectionViewCell()
             }
-            let basicDetail: Search? = movieData[indexPath.row]
-            cell.movieTitle.text = basicDetail?.title
-            if let year = basicDetail?.year {
-                cell.yearOfRelease.text = "Released Year: \(year)"
-            } else {
-                cell.yearOfRelease.text = "Released Year: NA"
-            }
-            if let type = basicDetail?.type {
-                cell.typeOfObject.text = type.rawValue
-            } else {
-                cell.typeOfObject.text = "Unknown"
-            }
-            cell.imdbID = basicDetail?.imdbID
-            cell.delegate = self
-            if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
-                cell.watchListButton.backgroundColor = .green
-                cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
-            } else {
-                cell.watchListButton.backgroundColor = .red
-                cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
-            }
-            if let imdb = basicDetail?.imdbID {
-                let itemNumber = NSString(string: imdb)
-                if let cachedImage = self.cache.object(forKey: itemNumber) {
-                    cell.moviePoster.image = cachedImage
-                } else {
-                    if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
-                            guard let self = self, let image = image else { return }
-                            self.cache.setObject(image, forKey: itemNumber)
-                        })
-                    }
-                }
-            }
+            setCellForListView(indexPath, cell)
             return cell
         } else {
             guard let cell = movieCollectionView.dequeueReusableCell(withReuseIdentifier: movieGridCollectionViewIndetifier, for: indexPath) as? MovieGridCollectionViewCell else {
                     return UICollectionViewCell()
             }
             cell.watchListButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
-            let basicDetail: Search? = movieData[indexPath.row]
-            cell.movieTitle.text = basicDetail?.title
-            if let year = basicDetail?.year {
-                cell.yearOfRelease.text = "Released Year: \(year)"
-            } else {
-                cell.yearOfRelease.text = "Released Year: NA"
-            }
-            if let type = basicDetail?.type {
-                cell.typeOfObject.text = type.rawValue
-            } else {
-                cell.typeOfObject.text = "Unknown"
-            }
-            cell.imdbID = basicDetail?.imdbID
-            cell.delegate = self
-            if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
-                cell.watchListButton.backgroundColor = .green
-                cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
-            } else {
-                cell.watchListButton.backgroundColor = .red
-                cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
-            }
-            if let imdb = basicDetail?.imdbID {
-                let itemNumber = NSString(string: imdb)
-                if let cachedImage = self.cache.object(forKey: itemNumber) {
-                    cell.moviePoster.image = cachedImage
-                } else {
-                    if let poster = basicDetail?.poster {
-                        cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
-                            guard let self = self, let image = image else { return }
-                            self.cache.setObject(image, forKey: itemNumber)
-                        })
-                    }
-                }
-            }
+            setCellForGridView(indexPath, cell)
             return cell
         }
     }
@@ -249,11 +209,29 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
             if let itemDetailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ItemDetailViewController") as? ItemDetailViewController {
                 itemDetailViewController.imdbID = imdbID
                 itemDetailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
-                itemDetailViewController.delegate = self
+                itemDetailViewController.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+                    return (self?.addFromDetails(imdbID: imdbID) ?? false)
+                }
                 self.navigationController?.pushViewController(itemDetailViewController, animated: true)
                 }
         } else {
             print("Collection view controller, movie detail search error")
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == (movieData.count - 5) {
+            if let text = initialMovie {
+                currentPage = currentPage + 1
+                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { [weak self] (movie) in
+                    self?.movieData.append(contentsOf: movie)
+                    self?.movieCollectionView.reloadData()
+                    self?.animatorView.removeFromSuperview()
+                })
+            }
+        }
+        if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
+            addLoader()
         }
     }
     
@@ -281,38 +259,81 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         return 0.0
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == (movieData.count - 5) {
-            if let text = initialMovie {
-                currentPage = currentPage + 1
-                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { [weak self] (movie) in
-                    self?.movieData.append(contentsOf: movie)
-                    self?.movieCollectionView.reloadData()
-                    self?.animatorView.removeFromSuperview()
-                })
-            }
+    fileprivate func setCellForListView(_ indexPath: IndexPath, _ cell: MovieCollectionViewCell) {
+        let basicDetail: Search? = movieData[indexPath.row]
+        cell.movieTitle.text = basicDetail?.title
+        cell.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+            return (self?.addToWatchListt(imdbID: imdbID) ?? false)
         }
-        if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
-            addLoader()
-        }
-    }
-}
-
-// MARK: - WatchList Extension
-extension MovieListScreen: WatchListProtocol {
-    func addToWatchList(imdbID: String) -> Bool {
-        if let indexOfMovie = MovieListScreen.watchList.firstIndex(of: imdbID) {
-            MovieListScreen.watchList.remove(at: indexOfMovie)
-            return false
+        if let year = basicDetail?.year {
+            cell.yearOfRelease.text = "Released Year: \(year)"
         } else {
-            MovieListScreen.watchList.append(imdbID)
-            return true
+            cell.yearOfRelease.text = "Released Year: NA"
+        }
+        if let type = basicDetail?.type {
+            cell.typeOfObject.text = type.rawValue
+        } else {
+            cell.typeOfObject.text = "Unknown"
+        }
+        cell.imdbID = basicDetail?.imdbID
+        if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
+            cell.watchListButton.backgroundColor = .green
+            cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
+        } else {
+            cell.watchListButton.backgroundColor = .red
+            cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
+        }
+        if let imdb = basicDetail?.imdbID {
+            let itemNumber = NSString(string: imdb)
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        self.cache.setObject(image, forKey: itemNumber)
+                    })
+                }
+            }
         }
     }
     
-    func reloadController() {
-        DispatchQueue.main.async {
-            self.movieCollectionView.reloadData()
+    fileprivate func setCellForGridView(_ indexPath: IndexPath, _ cell: MovieGridCollectionViewCell) {
+        let basicDetail: Search? = movieData[indexPath.row]
+        cell.movieTitle.text = basicDetail?.title
+        cell.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+            return (self?.addToWatchListt(imdbID: imdbID) ?? false)
+        }
+        if let year = basicDetail?.year {
+            cell.yearOfRelease.text = "Released Year: \(year)"
+        } else {
+            cell.yearOfRelease.text = "Released Year: NA"
+        }
+        if let type = basicDetail?.type {
+            cell.typeOfObject.text = type.rawValue
+        } else {
+            cell.typeOfObject.text = "Unknown"
+        }
+        cell.imdbID = basicDetail?.imdbID
+        if let imdbID: String = basicDetail?.imdbID, MovieListScreen.watchList.contains(imdbID) {
+            cell.watchListButton.backgroundColor = .green
+            cell.watchListButton.setTitle("ADDED TO WATCHLIST", for: .normal)
+        } else {
+            cell.watchListButton.backgroundColor = .red
+            cell.watchListButton.setTitle("ADD TO WATCHLIST", for: .normal)
+        }
+        if let imdb = basicDetail?.imdbID {
+            let itemNumber = NSString(string: imdb)
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                cell.moviePoster.image = cachedImage
+            } else {
+                if let poster = basicDetail?.poster {
+                    cell.moviePoster.imageFromServerURL(poster, placeHolder: UIImage(named: "placeholder"), completion: { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        self.cache.setObject(image, forKey: itemNumber)
+                    })
+                }
+            }
         }
     }
 }
