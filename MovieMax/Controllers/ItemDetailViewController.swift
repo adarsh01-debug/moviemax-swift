@@ -33,22 +33,7 @@ class ItemDetailViewController: UITableViewController {
     }
     
     @IBAction func watchListButtonAction(_ sender: Any) {
-        var addedToWatchList: Bool?
-        if let imdbID = imdbID {
-            guard let completionBlock = addToWatchListClosure else {return}
-            addedToWatchList = completionBlock(imdbID)
-        }
-        if let addedToWatchList = addedToWatchList {
-            if addedToWatchList == true {
-                watchListButtonOutlet.backgroundColor = UIColor.green
-                watchListButtonOutlet.setTitle("-", for: .normal)
-            } else {
-                watchListButtonOutlet.backgroundColor = UIColor.red
-                watchListButtonOutlet.setTitle("+", for: .normal)
-            }
-        } else {
-            print("Specific movie detail, added watchlist error")
-        }
+        toggleWatchlist()
     }
     
     // MARK: - Functions
@@ -107,6 +92,7 @@ class ItemDetailViewController: UITableViewController {
     }
     
     @objc func refresh(sender:AnyObject) {
+        toggleWatchlist()
         tableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
@@ -133,6 +119,25 @@ class ItemDetailViewController: UITableViewController {
             } else {
                 print("Specific movie detail, setdata error")
             }
+        }
+    }
+    
+    fileprivate func toggleWatchlist() {
+        var addedToWatchList: Bool?
+        if let imdbID = imdbID {
+            guard let completionBlock = addToWatchListClosure else {return}
+            addedToWatchList = completionBlock(imdbID)
+        }
+        if let addedToWatchList = addedToWatchList {
+            if addedToWatchList == true {
+                watchListButtonOutlet.backgroundColor = UIColor.green
+                watchListButtonOutlet.setTitle("-", for: .normal)
+            } else {
+                watchListButtonOutlet.backgroundColor = UIColor.red
+                watchListButtonOutlet.setTitle("+", for: .normal)
+            }
+        } else {
+            print("Specific movie detail, added watchlist error")
         }
     }
 }

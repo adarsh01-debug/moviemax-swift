@@ -219,6 +219,22 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == (movieData.count - 5) {
+            if let text = initialMovie {
+                currentPage = currentPage + 1
+                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { [weak self] (movie) in
+                    self?.movieData.append(contentsOf: movie)
+                    self?.movieCollectionView.reloadData()
+                    self?.animatorView.removeFromSuperview()
+                })
+            }
+        }
+        if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
+            addLoader()
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width =  movieCollectionView.bounds.width
         let height =  movieCollectionView.bounds.height
@@ -241,22 +257,6 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0.0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == (movieData.count - 5) {
-            if let text = initialMovie {
-                currentPage = currentPage + 1
-                movieAPI.fecthMovieDetails(movieTitle: text, page: self.currentPage, completion: { [weak self] (movie) in
-                    self?.movieData.append(contentsOf: movie)
-                    self?.movieCollectionView.reloadData()
-                    self?.animatorView.removeFromSuperview()
-                })
-            }
-        }
-        if (indexPath.row == movieData.count - 1), movieData.count >= 4 {
-            addLoader()
-        }
     }
     
     fileprivate func setCellForListView(_ indexPath: IndexPath, _ cell: MovieCollectionViewCell) {
