@@ -8,7 +8,6 @@
 import UIKit
 
 class MovieListScreen: UIViewController {
-    
     // MARK: - Outlets
     @IBOutlet var movieSearchBar: UISearchBar!
     @IBOutlet var movieCollectionView: UICollectionView!
@@ -27,6 +26,7 @@ class MovieListScreen: UIViewController {
     var initialMovie: String?
     private let movieAPI = MovieAPI()
     private let movieDetailAPI = MovieDetailAPI()
+    private var imdbID: String?
     private var totalPages: Int?
     private var currentPage: Int = 1
     private var isListView: Bool = true
@@ -54,8 +54,8 @@ class MovieListScreen: UIViewController {
         super.viewDidLoad()
         movieCollectionView.delegate = self
         movieCollectionView.dataSource = self
-        registerCustomViewInCell()
         movieSearchBar.delegate = self
+        registerCustomViewInCell()
         pullToRefresh()
         getStatus()
     }
@@ -206,14 +206,15 @@ extension MovieListScreen: UICollectionViewDelegate, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let imdbID = movieData[indexPath.row].imdbID {
-            if let itemDetailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ItemDetailViewController") as? ItemDetailViewController {
-                itemDetailViewController.imdbID = imdbID
-                itemDetailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
-                itemDetailViewController.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
+            self.imdbID = imdbID
+            if let detailViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController {
+                detailViewController.imdbID = imdbID
+                detailViewController.isPresentInWatchList = self.isPresentInWatchList(imdbID: imdbID)
+                detailViewController.addToWatchListClosure = { [weak self] (imdbID) -> (Bool) in
                     return (self?.addFromDetails(imdbID: imdbID) ?? false)
                 }
-                self.navigationController?.pushViewController(itemDetailViewController, animated: true)
-                }
+                self.navigationController?.pushViewController(detailViewController, animated: true)
+            }
         } else {
             print("Collection view controller, movie detail search error")
         }

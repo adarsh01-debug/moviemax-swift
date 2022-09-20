@@ -9,6 +9,14 @@ import UIKit
 
 class WatchListButtonTableViewCell: UITableViewCell {
 
+    @IBOutlet var watchListButtonOutlet: UIButton!
+    
+    var watchListHandlerClosure: (() -> Void)?
+    
+    @IBAction func watchListAction(_ sender: Any) {
+        watchListHandlerClosure?()
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,5 +27,4 @@ class WatchListButtonTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
 }

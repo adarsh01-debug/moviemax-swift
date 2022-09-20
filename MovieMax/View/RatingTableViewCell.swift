@@ -9,6 +9,7 @@ import UIKit
 
 class RatingTableViewCell: UITableViewCell {
 
+    @IBOutlet var ratingLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

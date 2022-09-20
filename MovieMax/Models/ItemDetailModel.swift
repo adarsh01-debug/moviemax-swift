@@ -19,5 +19,6 @@ struct ItemDetailModel: Codable {
         case poster = "Poster"
         case plot = "Plot"
         case language = "Language"
+        case imdbRating
     }
 }

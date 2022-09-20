@@ -9,6 +9,8 @@ import UIKit
 
 class LanguageTableViewCell: UITableViewCell {
 
+    @IBOutlet var languageLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

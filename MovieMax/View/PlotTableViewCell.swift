@@ -9,6 +9,7 @@ import UIKit
 
 class PlotTableViewCell: UITableViewCell {
 
+    @IBOutlet var plotLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

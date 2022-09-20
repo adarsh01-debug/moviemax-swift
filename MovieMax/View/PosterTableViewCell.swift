@@ -9,6 +9,7 @@ import UIKit
 
 class PosterTableViewCell: UITableViewCell {
 
+    @IBOutlet var posterImageView: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

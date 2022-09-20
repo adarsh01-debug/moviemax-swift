@@ -9,6 +9,14 @@ import UIKit
 
 class DoneButtonTableViewCell: UITableViewCell {
 
+    @IBOutlet var doneButtonOutlet: UIButton!
+    
+    var popViewClosure: (() -> Void)?
+    
+    @IBAction func doneButtonAction(_ sender: Any) {
+        popViewClosure?()
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
