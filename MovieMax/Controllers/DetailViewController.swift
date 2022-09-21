@@ -7,11 +7,12 @@
 
 import UIKit
 
-class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class DetailViewController: UIViewController {
     
-    
+    //MARK: - Outlets
     @IBOutlet var detailTableView: UITableView!
     
+    //MARK: - Variables
     private let doneButtonCellIdentifier = "DoneButtonTableViewCell"
     private let titleCellIdentifier = "TitleTableViewCell"
     private let posterCellIdentifier = "PosterTableViewCell"
@@ -19,13 +20,14 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private let languageCellIdentifier = "LanguageTableViewCell"
     private let ratingCellIdentifier = "RatingTableViewCell"
     private let watchListButtonCellIdentifier = "WatchListButtonTableViewCell"
-    private var viewModel: ViewModel?
+    private var viewModel = ViewModel(imdbID: "", isPresentInWatchList: false)
     private var activityIndicator = UIActivityIndicatorView()
     private var animatorView = UIView()
     var imdbID: String?
     var addToWatchListClosure: ((String) -> (Bool))?
     var isPresentInWatchList: Bool?
 
+    //MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         detailTableView.delegate = self
@@ -46,9 +48,8 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     private func setUpViewModel() {
-        if let imdbID = imdbID {
-            viewModel = ViewModel(imdbID: imdbID)
-            viewModel?.inantiateViewModel()
+        if let imdbID = imdbID, let isPresentInWatchList = self.isPresentInWatchList  {
+            viewModel = ViewModel(imdbID: imdbID, isPresentInWatchList: isPresentInWatchList)
             viewModel?.setDataClosure = { [weak self] in
                 self?.animatorView.removeFromSuperview()
                 self?.detailTableView.reloadData()
@@ -72,7 +73,9 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
-    
+}
+
+extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     private func registerCustomViewInCell() {
         let doneButtonNib = UINib(nibName: doneButtonCellIdentifier, bundle: nil)
         detailTableView.register(doneButtonNib, forCellReuseIdentifier: doneButtonCellIdentifier)
@@ -97,7 +100,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return viewModel?.getNumberOfRows() ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -122,7 +125,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 print("Failed to create the custom cell")
                 return UITableViewCell()
             }
-            if let url = URL(string: viewModel?.getPosterUrl() ?? "") {
+            if let url = viewModel?.getPosterUrl() {
                 cell.posterImageView.load(url: url)
             }
             return cell
@@ -153,17 +156,8 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 return UITableViewCell()
             }
             cell.watchListButtonOutlet.layer.cornerRadius = cell.watchListButtonOutlet.bounds.width / 2
-            if let isPresent = isPresentInWatchList {
-                if isPresent {
-                    cell.watchListButtonOutlet.backgroundColor = UIColor.green
-                    cell.watchListButtonOutlet.setTitle("-", for: .normal)
-                } else {
-                    cell.watchListButtonOutlet.backgroundColor = UIColor.red
-                    cell.watchListButtonOutlet.setTitle("+", for: .normal)
-                }
-            } else {
-                print("Specific movie detail, setdata error")
-            }
+            cell.watchListButtonOutlet.backgroundColor = viewModel?.getWatchListButtonBGColor()
+            cell.watchListButtonOutlet.setTitle(viewModel?.getWatchListButtonTitle(), for: .normal)
             cell.watchListHandlerClosure = { [weak self] in
                 var addedToWatchList: Bool?
                 if let imdbID = self?.viewModel?.imdbID {
