@@ -85,11 +85,11 @@ class MovieListScreen: UIViewController {
     @objc func refresh(sender:AnyObject) {
         if let initialMovie = initialMovie {
             movieAPI.fecthMovieDetails(movieTitle: initialMovie, page: 1, completion: { (movie) in
-                    self.movieData = movie
-                    self.initialMovie = initialMovie
-                    self.movieCollectionView.reloadData()
-                })
-            }
+                self.movieData = movie
+                self.initialMovie = initialMovie
+                self.movieCollectionView.reloadData()
+            })
+        }
         self.refreshControl.endRefreshing()
     }
     

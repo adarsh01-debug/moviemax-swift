@@ -23,6 +23,7 @@ class DetailViewController: UIViewController {
     private var viewModel = ViewModel(imdbID: "", isPresentInWatchList: false)
     private var activityIndicator = UIActivityIndicatorView()
     private var animatorView = UIView()
+    private var refreshControl = UIRefreshControl()
     var imdbID: String?
     var addToWatchListClosure: ((String) -> (Bool))?
     var isPresentInWatchList: Bool?
@@ -35,6 +36,7 @@ class DetailViewController: UIViewController {
         registerCustomViewInCell()
         setUpViewModel()
         addLoader()
+        pullToRefresh()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,29 +75,37 @@ class DetailViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
+    
+    fileprivate func pullToRefresh() {
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.refreshControl.tintColor = UIColor.white
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
+        self.refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: UIControl.Event.valueChanged)
+        detailTableView.refreshControl = self.refreshControl
+    }
+    
+    @objc func refresh(sender:AnyObject) {
+        detailTableView.reloadData()
+        self.refreshControl.endRefreshing()
+    }
 }
 
 //MARK: - TableView Extension
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
+    
     private func registerCustomViewInCell() {
         let doneButtonNib = UINib(nibName: doneButtonCellIdentifier, bundle: nil)
         detailTableView.register(doneButtonNib, forCellReuseIdentifier: doneButtonCellIdentifier)
-        
         let titleNib = UINib(nibName: titleCellIdentifier, bundle: nil)
         detailTableView.register(titleNib, forCellReuseIdentifier: titleCellIdentifier)
-        
         let posterNib = UINib(nibName: posterCellIdentifier, bundle: nil)
         detailTableView.register(posterNib, forCellReuseIdentifier: posterCellIdentifier)
-        
         let plotNib = UINib(nibName: plotCellIdentifier, bundle: nil)
         detailTableView.register(plotNib, forCellReuseIdentifier: plotCellIdentifier)
-
         let languageNib = UINib(nibName: languageCellIdentifier, bundle: nil)
         detailTableView.register(languageNib, forCellReuseIdentifier: languageCellIdentifier)
-        
         let ratingNib = UINib(nibName: ratingCellIdentifier, bundle: nil)
         detailTableView.register(ratingNib, forCellReuseIdentifier: ratingCellIdentifier)
-        
         let watchListButtonNib = UINib(nibName: watchListButtonCellIdentifier, bundle: nil)
         detailTableView.register(watchListButtonNib, forCellReuseIdentifier: watchListButtonCellIdentifier)
     }
