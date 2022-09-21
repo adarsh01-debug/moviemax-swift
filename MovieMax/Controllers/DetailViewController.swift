@@ -75,6 +75,7 @@ class DetailViewController: UIViewController {
     }
 }
 
+//MARK: - TableView Extension
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     private func registerCustomViewInCell() {
         let doneButtonNib = UINib(nibName: doneButtonCellIdentifier, bundle: nil)
