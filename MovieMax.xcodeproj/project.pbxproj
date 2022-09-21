@@ -46,6 +46,13 @@
 		75DF57DE28D9C45000342D49 /* TitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75DF57DC28D9C45000342D49 /* TitleTableViewCell.xib */; };
 		75DF57E128D9C96A00342D49 /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57DF28D9C96A00342D49 /* LanguageTableViewCell.swift */; };
 		75DF57E228D9C96A00342D49 /* LanguageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75DF57E028D9C96A00342D49 /* LanguageTableViewCell.xib */; };
+		75DF57E428D9F1C300342D49 /* DoneButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57E328D9F1C300342D49 /* DoneButtonViewModel.swift */; };
+		75DF57E628D9F1D000342D49 /* TitleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57E528D9F1D000342D49 /* TitleViewModel.swift */; };
+		75DF57E828D9F1DB00342D49 /* PosterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57E728D9F1DB00342D49 /* PosterViewModel.swift */; };
+		75DF57EA28D9F1ED00342D49 /* PlotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57E928D9F1ED00342D49 /* PlotViewModel.swift */; };
+		75DF57EC28D9F1FB00342D49 /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57EB28D9F1FB00342D49 /* LanguageViewModel.swift */; };
+		75DF57EE28D9F20800342D49 /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57ED28D9F20800342D49 /* RatingViewModel.swift */; };
+		75DF57F028D9F21700342D49 /* WatchListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF57EF28D9F21700342D49 /* WatchListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +118,13 @@
 		75DF57DC28D9C45000342D49 /* TitleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewCell.xib; sourceTree = "<group>"; };
 		75DF57DF28D9C96A00342D49 /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		75DF57E028D9C96A00342D49 /* LanguageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LanguageTableViewCell.xib; sourceTree = "<group>"; };
+		75DF57E328D9F1C300342D49 /* DoneButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoneButtonViewModel.swift; sourceTree = "<group>"; };
+		75DF57E528D9F1D000342D49 /* TitleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleViewModel.swift; sourceTree = "<group>"; };
+		75DF57E728D9F1DB00342D49 /* PosterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterViewModel.swift; sourceTree = "<group>"; };
+		75DF57E928D9F1ED00342D49 /* PlotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotViewModel.swift; sourceTree = "<group>"; };
+		75DF57EB28D9F1FB00342D49 /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
+		75DF57ED28D9F20800342D49 /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
+		75DF57EF28D9F21700342D49 /* WatchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +188,13 @@
 			isa = PBXGroup;
 			children = (
 				755DB90E28D4972900C9DE12 /* DetailViewModel.swift */,
+				75DF57E328D9F1C300342D49 /* DoneButtonViewModel.swift */,
+				75DF57E528D9F1D000342D49 /* TitleViewModel.swift */,
+				75DF57E728D9F1DB00342D49 /* PosterViewModel.swift */,
+				75DF57E928D9F1ED00342D49 /* PlotViewModel.swift */,
+				75DF57EB28D9F1FB00342D49 /* LanguageViewModel.swift */,
+				75DF57ED28D9F20800342D49 /* RatingViewModel.swift */,
+				75DF57EF28D9F21700342D49 /* WatchListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -201,6 +222,7 @@
 		75C3063428C2404800CF4ACC /* MovieMax */ = {
 			isa = PBXGroup;
 			children = (
+				75DF57F128D9F96000342D49 /* Handlers */,
 				755DB90D28D494E600C9DE12 /* ViewModel */,
 				75368EC928C33C7600B47BF8 /* View */,
 				75C3067528C24EC900CF4ACC /* Models */,
@@ -259,6 +281,13 @@
 				75661EB928C3C43400E8A11D /* ItemDetailModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		75DF57F128D9F96000342D49 /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Handlers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -408,6 +437,8 @@
 				75661EBA28C3C43400E8A11D /* ItemDetailModel.swift in Sources */,
 				753B9A1628C3DAB100DC5D07 /* FetchMovieDetails.swift in Sources */,
 				75368EBB28C332EA00B47BF8 /* FetchMovies.swift in Sources */,
+				75DF57EE28D9F20800342D49 /* RatingViewModel.swift in Sources */,
+				75DF57E628D9F1D000342D49 /* TitleViewModel.swift in Sources */,
 				75368EC528C33B3000B47BF8 /* MovieListScreen.swift in Sources */,
 				75C3063628C2404800CF4ACC /* AppDelegate.swift in Sources */,
 				75DF57C428D9C14400342D49 /* DoneButtonTableViewCell.swift in Sources */,
@@ -415,14 +446,19 @@
 				75DF57CC28D9C17400342D49 /* PlotTableViewCell.swift in Sources */,
 				75DF57C128D9C10B00342D49 /* DetailViewController.swift in Sources */,
 				75368EC028C3330300B47BF8 /* MovieMax.swift in Sources */,
+				75DF57EC28D9F1FB00342D49 /* LanguageViewModel.swift in Sources */,
+				75DF57EA28D9F1ED00342D49 /* PlotViewModel.swift in Sources */,
 				75DF57D528D9C1C900342D49 /* RatingTableViewCell.swift in Sources */,
 				75DF57DD28D9C45000342D49 /* TitleTableViewCell.swift in Sources */,
+				75DF57E828D9F1DB00342D49 /* PosterViewModel.swift in Sources */,
 				75C3063828C2404800CF4ACC /* SceneDelegate.swift in Sources */,
+				75DF57E428D9F1C300342D49 /* DoneButtonViewModel.swift in Sources */,
 				753CC4DD28CF029500DCB070 /* HomeViewController.swift in Sources */,
 				753CC4FA28CF044B00DCB070 /* SearchTextFieldTableViewCell.swift in Sources */,
 				75DF57E128D9C96A00342D49 /* LanguageTableViewCell.swift in Sources */,
 				7543BC3428C87023006E8D26 /* MovieGridCollectionViewCell.swift in Sources */,
 				75DF57D928D9C1DF00342D49 /* WatchListButtonTableViewCell.swift in Sources */,
+				75DF57F028D9F21700342D49 /* WatchListViewModel.swift in Sources */,
 				755DB90F28D4972900C9DE12 /* DetailViewModel.swift in Sources */,
 				753CC50128CF046000DCB070 /* SearchButtonTableViewCell.swift in Sources */,
 			);

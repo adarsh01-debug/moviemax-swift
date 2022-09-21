@@ -12,17 +12,17 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBOutlet var detailTableView: UITableView!
     
-    let doneButtonCellIdentifier = "DoneButtonTableViewCell"
-    let titleCellIdentifier = "TitleTableViewCell"
-    let posterCellIdentifier = "PosterTableViewCell"
-    let plotCellIdentifier = "PlotTableViewCell"
-    let languageCellIdentifier = "LanguageTableViewCell"
-    let ratingCellIdentifier = "RatingTableViewCell"
-    let watchListButtonCellIdentifier = "WatchListButtonTableViewCell"
-    var viewModel: ViewModel?
-    var imdbID: String?
+    private let doneButtonCellIdentifier = "DoneButtonTableViewCell"
+    private let titleCellIdentifier = "TitleTableViewCell"
+    private let posterCellIdentifier = "PosterTableViewCell"
+    private let plotCellIdentifier = "PlotTableViewCell"
+    private let languageCellIdentifier = "LanguageTableViewCell"
+    private let ratingCellIdentifier = "RatingTableViewCell"
+    private let watchListButtonCellIdentifier = "WatchListButtonTableViewCell"
+    private var viewModel: ViewModel?
     private var activityIndicator = UIActivityIndicatorView()
     private var animatorView = UIView()
+    var imdbID: String?
     var addToWatchListClosure: ((String) -> (Bool))?
     var isPresentInWatchList: Bool?
 
@@ -48,7 +48,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private func setUpViewModel() {
         if let imdbID = imdbID {
             viewModel = ViewModel(imdbID: imdbID)
-            viewModel?.detailFetch()
+            viewModel?.inantiateViewModel()
             viewModel?.setDataClosure = { [weak self] in
                 self?.animatorView.removeFromSuperview()
                 self?.detailTableView.reloadData()
