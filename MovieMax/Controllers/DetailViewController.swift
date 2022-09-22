@@ -13,13 +13,6 @@ class DetailViewController: UIViewController {
     @IBOutlet var detailTableView: UITableView!
     
     //MARK: - Variables
-    private let doneButtonCellIdentifier = "DoneButtonTableViewCell"
-    private let titleCellIdentifier = "TitleTableViewCell"
-    private let posterCellIdentifier = "PosterTableViewCell"
-    private let plotCellIdentifier = "PlotTableViewCell"
-    private let languageCellIdentifier = "LanguageTableViewCell"
-    private let ratingCellIdentifier = "RatingTableViewCell"
-    private let watchListButtonCellIdentifier = "WatchListButtonTableViewCell"
     private var viewModel = ViewModel(imdbID: "", isPresentInWatchList: false)
     private var activityIndicator = UIActivityIndicatorView()
     private var animatorView = UIView()
@@ -101,20 +94,20 @@ class DetailViewController: UIViewController {
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     private func registerCustomViewInCell() {
-        let doneButtonNib = UINib(nibName: doneButtonCellIdentifier, bundle: nil)
-        detailTableView.register(doneButtonNib, forCellReuseIdentifier: doneButtonCellIdentifier)
-        let titleNib = UINib(nibName: titleCellIdentifier, bundle: nil)
-        detailTableView.register(titleNib, forCellReuseIdentifier: titleCellIdentifier)
-        let posterNib = UINib(nibName: posterCellIdentifier, bundle: nil)
-        detailTableView.register(posterNib, forCellReuseIdentifier: posterCellIdentifier)
-        let plotNib = UINib(nibName: plotCellIdentifier, bundle: nil)
-        detailTableView.register(plotNib, forCellReuseIdentifier: plotCellIdentifier)
-        let languageNib = UINib(nibName: languageCellIdentifier, bundle: nil)
-        detailTableView.register(languageNib, forCellReuseIdentifier: languageCellIdentifier)
-        let ratingNib = UINib(nibName: ratingCellIdentifier, bundle: nil)
-        detailTableView.register(ratingNib, forCellReuseIdentifier: ratingCellIdentifier)
-        let watchListButtonNib = UINib(nibName: watchListButtonCellIdentifier, bundle: nil)
-        detailTableView.register(watchListButtonNib, forCellReuseIdentifier: watchListButtonCellIdentifier)
+        let doneButtonNib = UINib(nibName: TableViewCellConstants.doneButtonCellIdentifier, bundle: nil)
+        detailTableView.register(doneButtonNib, forCellReuseIdentifier: TableViewCellConstants.doneButtonCellIdentifier)
+        let titleNib = UINib(nibName: TableViewCellConstants.titleCellIdentifier, bundle: nil)
+        detailTableView.register(titleNib, forCellReuseIdentifier: TableViewCellConstants.titleCellIdentifier)
+        let posterNib = UINib(nibName: TableViewCellConstants.posterCellIdentifier, bundle: nil)
+        detailTableView.register(posterNib, forCellReuseIdentifier: TableViewCellConstants.posterCellIdentifier)
+        let plotNib = UINib(nibName: TableViewCellConstants.plotCellIdentifier, bundle: nil)
+        detailTableView.register(plotNib, forCellReuseIdentifier: TableViewCellConstants.plotCellIdentifier)
+        let languageNib = UINib(nibName: TableViewCellConstants.languageCellIdentifier, bundle: nil)
+        detailTableView.register(languageNib, forCellReuseIdentifier: TableViewCellConstants.languageCellIdentifier)
+        let ratingNib = UINib(nibName: TableViewCellConstants.ratingCellIdentifier, bundle: nil)
+        detailTableView.register(ratingNib, forCellReuseIdentifier: TableViewCellConstants.ratingCellIdentifier)
+        let watchListButtonNib = UINib(nibName: TableViewCellConstants.watchListButtonCellIdentifier, bundle: nil)
+        detailTableView.register(watchListButtonNib, forCellReuseIdentifier: TableViewCellConstants.watchListButtonCellIdentifier)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -146,14 +139,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
                 break
             }
             if indexPath.row == 0 {
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: doneButtonCellIdentifier, for: indexPath) as? DoneButtonTableViewCell else {
-                    print("Failed to create the custom cell")
-                    return UITableViewCell()
-                }
-                cell.popViewClosure = { [weak self] in
-                    self?.navigationController?.popViewController(animated: true)
-                }
-                return cell
+                return setDoneButtonCell(indexPath: indexPath)
             } else if indexPath.row == 6 {
                 return setWatchListButtonCell(indexPath: indexPath)
             } else {
@@ -182,9 +168,23 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return UITableView.automaticDimension
     }
+}
+
+//MARK: - Extenison to set cells having buttons
+extension DetailViewController {
+    func setDoneButtonCell(indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = detailTableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.doneButtonCellIdentifier, for: indexPath) as? DoneButtonTableViewCell else {
+            print("Failed to create the custom cell")
+            return UITableViewCell()
+        }
+        cell.popViewClosure = { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        return cell
+    }
     
     func setWatchListButtonCell(indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = detailTableView.dequeueReusableCell(withIdentifier: watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
+        guard let cell = detailTableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
             print("Failed to create the custom cell")
             return UITableViewCell()
         }

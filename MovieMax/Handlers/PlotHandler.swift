@@ -10,7 +10,6 @@ import Foundation
 
 class PlotHandler: TableViewHandler {
     
-    private let plotCellIdentifier = "PlotTableViewCell"
     var viewModel: PlotViewModel?
     
     init(viewModel: PlotViewModel) {
@@ -22,7 +21,7 @@ class PlotHandler: TableViewHandler {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: plotCellIdentifier, for: indexPath) as? PlotTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.plotCellIdentifier, for: indexPath) as? PlotTableViewCell else {
             print("Failed to create the custom cell")
             return UITableViewCell()
         }

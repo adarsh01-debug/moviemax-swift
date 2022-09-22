@@ -10,7 +10,6 @@ import Foundation
 
 class PosterHandler: TableViewHandler {
     
-    private let posterCellIdentifier = "PosterTableViewCell"
     var viewModel: PosterViewModel?
     
     init(viewModel: PosterViewModel) {
@@ -22,7 +21,7 @@ class PosterHandler: TableViewHandler {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: posterCellIdentifier, for: indexPath) as? PosterTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.posterCellIdentifier, for: indexPath) as? PosterTableViewCell else {
             print("Failed to create the custom cell")
             return UITableViewCell()
         }

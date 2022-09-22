@@ -10,7 +10,6 @@ import Foundation
 
 class LanguageHandler: TableViewHandler {
     
-    private let languageCellIdentifier = "LanguageTableViewCell"
     var viewModel: LanguageViewModel?
     
     init(viewModel: LanguageViewModel) {
@@ -22,7 +21,7 @@ class LanguageHandler: TableViewHandler {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: languageCellIdentifier, for: indexPath) as? LanguageTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.languageCellIdentifier, for: indexPath) as? LanguageTableViewCell else {
             print("Failed to create the custom cell")
             return UITableViewCell()
         }

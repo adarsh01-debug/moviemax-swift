@@ -15,7 +15,6 @@ protocol TableViewHandler: AnyObject {
 
 class TitleHandler: TableViewHandler {
     
-    private let titleCellIdentifier = "TitleTableViewCell"
     var viewModel: TitleViewModel?
     
     init(viewModel: TitleViewModel?) {
@@ -27,7 +26,7 @@ class TitleHandler: TableViewHandler {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: titleCellIdentifier, for: indexPath) as? TitleTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.titleCellIdentifier, for: indexPath) as? TitleTableViewCell else {
             print("Failed to create the custom cell")
             return UITableViewCell()
         }

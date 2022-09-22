@@ -16,9 +16,6 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
     var searchedText: String?
     private let movieAPI = MovieAPI()
     private var movieData: [Search] = []
-    private let bannerKCellIdentifier = "BannerTableViewCell"
-    private let searchTextFieldKCellIdentifier = "SearchTextFieldTableViewCell"
-    private let searchButtonKCellIdentifier = "SearchButtonTableViewCell"
     
     // MARK: - Functions
     override func viewDidLoad() {
@@ -61,14 +58,14 @@ class HomeViewController: UIViewController, UITextFieldDelegate {
 // MARK: - TableView Extenison
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     private func registerCustomViewInCell() {
-        let bannerNib = UINib(nibName: bannerKCellIdentifier, bundle: nil)
-        homeTableView.register(bannerNib, forCellReuseIdentifier: bannerKCellIdentifier)
+        let bannerNib = UINib(nibName: TableViewCellConstants.bannerKCellIdentifier, bundle: nil)
+        homeTableView.register(bannerNib, forCellReuseIdentifier: TableViewCellConstants.bannerKCellIdentifier)
         
-        let searchFieldNib = UINib(nibName: searchTextFieldKCellIdentifier, bundle: nil)
-        homeTableView.register(searchFieldNib, forCellReuseIdentifier: searchTextFieldKCellIdentifier)
+        let searchFieldNib = UINib(nibName: TableViewCellConstants.searchTextFieldKCellIdentifier, bundle: nil)
+        homeTableView.register(searchFieldNib, forCellReuseIdentifier: TableViewCellConstants.searchTextFieldKCellIdentifier)
         
-        let searchButtonNib = UINib(nibName: searchButtonKCellIdentifier, bundle: nil)
-        homeTableView.register(searchButtonNib, forCellReuseIdentifier: searchButtonKCellIdentifier)
+        let searchButtonNib = UINib(nibName: TableViewCellConstants.searchButtonKCellIdentifier, bundle: nil)
+        homeTableView.register(searchButtonNib, forCellReuseIdentifier: TableViewCellConstants.searchButtonKCellIdentifier)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,7 +74,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: bannerKCellIdentifier, for: indexPath) as? BannerTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.bannerKCellIdentifier, for: indexPath) as? BannerTableViewCell else {
                 print("Failed to create the custom cell")
                 return UITableViewCell()
             }
@@ -85,14 +82,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.banner.clipsToBounds = true
             return cell
         } else if indexPath.row == 1 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: searchTextFieldKCellIdentifier, for: indexPath) as? SearchTextFieldTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.searchTextFieldKCellIdentifier, for: indexPath) as? SearchTextFieldTableViewCell else {
                 print("Failed to create the custom cell")
                 return UITableViewCell()
             }
             cell.searchTextField.delegate = self
             return cell
         } else if indexPath.row == 2 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: searchButtonKCellIdentifier, for: indexPath) as? SearchButtonTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCellConstants.searchButtonKCellIdentifier, for: indexPath) as? SearchButtonTableViewCell else {
                 print("Failed to create the custom cell")
                 return UITableViewCell()
             }
@@ -116,19 +113,20 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let height = UIScreen.main.bounds.height
         if UIDevice.current.orientation.isLandscape {
             if indexPath.row == 0 {
-                return UIScreen.main.bounds.height * 1.5
+                return height * 1.5
             } else if indexPath.row == 1 {
-                return UIScreen.main.bounds.height / 4
+                return height / 4
             } else {
-                return UIScreen.main.bounds.height / 4
+                return height / 4
             }
         } else {
             if indexPath.row == 0 {
-                return UIScreen.main.bounds.height / 2
+                return height / 2
             } else {
-                return UIScreen.main.bounds.height / 5
+                return height / 5
             }
         }
     }
