@@ -155,32 +155,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 return cell
             } else if indexPath.row == 6 {
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
-                    print("Failed to create the custom cell")
-                    return UITableViewCell()
-                }
-                cell.watchListButtonOutlet.layer.cornerRadius = cell.watchListButtonOutlet.bounds.width / 2
-                cell.watchListButtonOutlet.backgroundColor = viewModel?.getWatchListButtonBGColor()
-                cell.watchListButtonOutlet.setTitle(viewModel?.getWatchListButtonTitle(), for: .normal)
-                cell.watchListHandlerClosure = { [weak self] in
-                    var addedToWatchList: Bool?
-                    if let imdbID = self?.viewModel?.imdbID {
-                        guard let completionBlock = self?.addToWatchListClosure else {return}
-                        addedToWatchList = completionBlock(imdbID)
-                    }
-                    if let addedToWatchList = addedToWatchList {
-                        if addedToWatchList == true {
-                            cell.watchListButtonOutlet.backgroundColor = UIColor.green
-                            cell.watchListButtonOutlet.setTitle("-", for: .normal)
-                        } else {
-                            cell.watchListButtonOutlet.backgroundColor = UIColor.red
-                            cell.watchListButtonOutlet.setTitle("+", for: .normal)
-                        }
-                    } else {
-                        print("Specific movie detail, added watchlist error")
-                    }
-                }
-                return cell
+                return setWatchListButtonCell(indexPath: indexPath)
             } else {
                 return rowHandler?.tableView(tableView, cellForRowAt: indexPath) ?? UITableViewCell()
             }
@@ -206,5 +181,34 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         return UITableView.automaticDimension
+    }
+    
+    func setWatchListButtonCell(indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = detailTableView.dequeueReusableCell(withIdentifier: watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
+            print("Failed to create the custom cell")
+            return UITableViewCell()
+        }
+        cell.watchListButtonOutlet.layer.cornerRadius = cell.watchListButtonOutlet.bounds.width / 2
+        cell.watchListButtonOutlet.backgroundColor = viewModel?.getWatchListButtonBGColor()
+        cell.watchListButtonOutlet.setTitle(viewModel?.getWatchListButtonTitle(), for: .normal)
+        cell.watchListHandlerClosure = { [weak self] in
+            var addedToWatchList: Bool?
+            if let imdbID = self?.viewModel?.imdbID {
+                guard let completionBlock = self?.addToWatchListClosure else {return}
+                addedToWatchList = completionBlock(imdbID)
+            }
+            if let addedToWatchList = addedToWatchList {
+                if addedToWatchList == true {
+                    cell.watchListButtonOutlet.backgroundColor = UIColor.green
+                    cell.watchListButtonOutlet.setTitle("-", for: .normal)
+                } else {
+                    cell.watchListButtonOutlet.backgroundColor = UIColor.red
+                    cell.watchListButtonOutlet.setTitle("+", for: .normal)
+                }
+            } else {
+                print("Specific movie detail, added watchlist error")
+            }
+        }
+        return cell
     }
 }
