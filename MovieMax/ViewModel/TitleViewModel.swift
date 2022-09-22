@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 class TitleViewModel {
     private var title: String?
@@ -16,9 +15,6 @@ class TitleViewModel {
     }
     
     func getTitle() -> String {
-        if let title = title {
-            return title
-        }
-        return "NA"
+        return title ?? "NA"
     }
 }

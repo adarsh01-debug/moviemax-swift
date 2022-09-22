@@ -27,6 +27,7 @@ class DetailViewController: UIViewController {
     var imdbID: String?
     var addToWatchListClosure: ((String) -> (Bool))?
     var isPresentInWatchList: Bool?
+    var isDataLoaded: Bool = false
 
     //MARK: - Functions
     override func viewDidLoad() {
@@ -35,6 +36,7 @@ class DetailViewController: UIViewController {
         detailTableView.dataSource = self
         registerCustomViewInCell()
         setUpViewModel()
+        fetchMovieDetails()
         addLoader()
         pullToRefresh()
     }
@@ -52,11 +54,16 @@ class DetailViewController: UIViewController {
     private func setUpViewModel() {
         if let imdbID = imdbID, let isPresentInWatchList = self.isPresentInWatchList  {
             viewModel = ViewModel(imdbID: imdbID, isPresentInWatchList: isPresentInWatchList)
-            viewModel?.setDataClosure = { [weak self] in
+            viewModel?.reloadDataClosure = { [weak self] in
+                self?.isDataLoaded = true
                 self?.animatorView.removeFromSuperview()
                 self?.detailTableView.reloadData()
             }
         }
+    }
+    
+    private func fetchMovieDetails() {
+        viewModel?.detailFetch()
     }
     
     fileprivate func addLoader() {
@@ -111,102 +118,91 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.getNumberOfRows() ?? 0
+        if let numOfRows = viewModel?.getNumberOfRows() {
+            return numOfRows + 2
+        }
+        return 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: doneButtonCellIdentifier, for: indexPath) as? DoneButtonTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
+        if isDataLoaded {
+            var rowType: Components?
+            if indexPath.row != 0, indexPath.row != 6 {
+                rowType =  viewModel?.rows[indexPath.row - 1] ?? nil
             }
-            cell.popViewClosure = { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
+            var rowHandler: TableViewHandler?
+            switch rowType {
+            case .title(let vm):
+                rowHandler = TitleHandler(viewModel: vm)
+            case .poster(let vm):
+                rowHandler = PosterHandler(viewModel: vm)
+            case .plot(let vm):
+                rowHandler = PlotHandler(viewModel: vm)
+            case .language(let vm):
+                rowHandler = LanguageHandler(viewModel: vm)
+            case .rating(let vm):
+                rowHandler = RatingHandler(viewModel: vm)
+            default:
+                break
             }
-            return cell
-        } else if indexPath.row == 1 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: titleCellIdentifier, for: indexPath) as? TitleTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            cell.titleLabel.text = viewModel?.getTitle()
-            return cell
-        } else if indexPath.row == 2 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: posterCellIdentifier, for: indexPath) as? PosterTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            if let url = viewModel?.getPosterUrl() {
-                cell.posterImageView.load(url: url)
-            }
-            return cell
-        } else if indexPath.row == 3 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: plotCellIdentifier, for: indexPath) as? PlotTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            cell.plotLabel.text = viewModel?.getPlot()
-            return cell
-        } else if indexPath.row == 4 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: languageCellIdentifier, for: indexPath) as? LanguageTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            cell.languageLabel.text = viewModel?.getLanguage()
-            return cell
-        } else if indexPath.row == 5 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ratingCellIdentifier, for: indexPath) as? RatingTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            cell.ratingLabel.text = viewModel?.getRating()
-            return cell
-        } else if indexPath.row == 6 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
-                print("Failed to create the custom cell")
-                return UITableViewCell()
-            }
-            cell.watchListButtonOutlet.layer.cornerRadius = cell.watchListButtonOutlet.bounds.width / 2
-            cell.watchListButtonOutlet.backgroundColor = viewModel?.getWatchListButtonBGColor()
-            cell.watchListButtonOutlet.setTitle(viewModel?.getWatchListButtonTitle(), for: .normal)
-            cell.watchListHandlerClosure = { [weak self] in
-                var addedToWatchList: Bool?
-                if let imdbID = self?.viewModel?.imdbID {
-                    guard let completionBlock = self?.addToWatchListClosure else {return}
-                    addedToWatchList = completionBlock(imdbID)
+            if indexPath.row == 0 {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: doneButtonCellIdentifier, for: indexPath) as? DoneButtonTableViewCell else {
+                    print("Failed to create the custom cell")
+                    return UITableViewCell()
                 }
-                if let addedToWatchList = addedToWatchList {
-                    if addedToWatchList == true {
-                        cell.watchListButtonOutlet.backgroundColor = UIColor.green
-                        cell.watchListButtonOutlet.setTitle("-", for: .normal)
-                    } else {
-                        cell.watchListButtonOutlet.backgroundColor = UIColor.red
-                        cell.watchListButtonOutlet.setTitle("+", for: .normal)
+                cell.popViewClosure = { [weak self] in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+                return cell
+            } else if indexPath.row == 6 {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: watchListButtonCellIdentifier, for: indexPath) as? WatchListButtonTableViewCell else {
+                    print("Failed to create the custom cell")
+                    return UITableViewCell()
+                }
+                cell.watchListButtonOutlet.layer.cornerRadius = cell.watchListButtonOutlet.bounds.width / 2
+                cell.watchListButtonOutlet.backgroundColor = viewModel?.getWatchListButtonBGColor()
+                cell.watchListButtonOutlet.setTitle(viewModel?.getWatchListButtonTitle(), for: .normal)
+                cell.watchListHandlerClosure = { [weak self] in
+                    var addedToWatchList: Bool?
+                    if let imdbID = self?.viewModel?.imdbID {
+                        guard let completionBlock = self?.addToWatchListClosure else {return}
+                        addedToWatchList = completionBlock(imdbID)
                     }
-                } else {
-                    print("Specific movie detail, added watchlist error")
+                    if let addedToWatchList = addedToWatchList {
+                        if addedToWatchList == true {
+                            cell.watchListButtonOutlet.backgroundColor = UIColor.green
+                            cell.watchListButtonOutlet.setTitle("-", for: .normal)
+                        } else {
+                            cell.watchListButtonOutlet.backgroundColor = UIColor.red
+                            cell.watchListButtonOutlet.setTitle("+", for: .normal)
+                        }
+                    } else {
+                        print("Specific movie detail, added watchlist error")
+                    }
                 }
+                return cell
+            } else {
+                return rowHandler?.tableView(tableView, cellForRowAt: indexPath) ?? UITableViewCell()
             }
-            return cell
-        } else {
-            return UITableViewCell()
         }
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let height = UIScreen.main.bounds.height
         if UIDevice.current.orientation.isLandscape {
             if indexPath.row == 2 {
-                return UIScreen.main.bounds.height / 0.8
+                return height / 0.8
             }
             if indexPath.row == 6 {
-                return UIScreen.main.bounds.height / 2
+                return height / 2
             }
         } else {
             if indexPath.row == 2 {
-                return UIScreen.main.bounds.height / 2
+                return height / 2
             }
             if indexPath.row == 6 {
-                return UIScreen.main.bounds.height / 5
+                return height / 5
             }
         }
         return UITableView.automaticDimension

@@ -14,10 +14,10 @@ class PosterViewModel {
         self.posterUrl = posterUrl
     }
     
-    func getPosterUrl() -> String {
+    func getPosterUrl() -> URL? {
         if let posterUrl = posterUrl {
-            return posterUrl
+            return URL(string: posterUrl) ?? nil
         }
-        return "NA"
+        return nil
     }
 }

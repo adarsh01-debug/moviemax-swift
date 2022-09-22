@@ -14,7 +14,7 @@ struct ItemDetailModel: Codable {
     var language: String?
     var imdbRating: String?
     
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case title = "Title"
         case poster = "Poster"
         case plot = "Plot"
